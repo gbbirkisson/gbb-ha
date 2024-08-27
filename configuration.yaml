@@ -1,0 +1,22 @@
+---
+default_config:
+
+frontend:
+  themes: !include_dir_merge_named themes
+
+logger:
+  logs:
+    custom_components.gbb_health: debug
+
+sensor:
+  - platform: gbb_health
+    id: 020166bc-5eb3-4a30-9f5a-356d15a3ee09
+    name: Healthcheck
+    interval: 00:00:05
+    grace_period: 00:00:10
+    # required:
+    #   - gummi
+    ignore:
+      - person.admin
+      - conversation.home_assistant
+      - tts.google_en_com

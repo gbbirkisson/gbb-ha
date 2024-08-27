@@ -1,0 +1,112 @@
+[tool.poetry]
+name = "gbb-ha"
+version = "0.1.0"
+description = ""
+authors = ["Guðmundur Björn Birkisson <gbb@gbb.is>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+
+[tool.poetry.group.dev.dependencies]
+pytest-cov = "^5.0.0"
+pytest-homeassistant-custom-component = "^0.13.154"
+ruff = "^0.6.2"
+mypy = "^1.11.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.coverage.run]
+source = ["custom_components"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "raise NotImplemented()",
+  "if __name__ == '__main__':",
+  "main()",
+]
+show_missing = true
+
+[tool.ruff]
+line-length = 94
+exclude = [".venv", "__pycache__", ".mypy_cache"]
+
+[lint]
+select = [
+  "F", # Pyflakes
+  "E", # ?
+  "W", # pycodestyle
+  # "C", # mccabe
+  "I", # isort
+  "N", # pep8-naming
+  # "D",   # pydocstyle
+  "UP",  # pyupgrade
+  "YTT", # flake8-2020
+  # "ANN", # flake8-annotations
+  # "S",   # flake8-bandit
+  "BLE", # flake8-blind-except
+  # "FBT", # flake8-boolean-trap
+  "B", # flake8-bugbear
+  "A", # flake8-builtins
+  # "COM", # flake8-commas
+  "C4",  # flake8-comprehensions
+  "DTZ", # flake8-datetimez
+  "T10", # flake8-debugger
+  "DJ",  # flake8-django
+  # "EM",  # flake8-errmsg
+  "EXE", # flake8-executable
+  "ISC", # flake8-implicit-str-concat
+  "ICN", # flake8-import-conventions
+  "G",   # flake8-logging-format
+  "INP", # flake8-no-pep420
+  "PIE", # flake8-pie
+  "T20", # flake8-print
+  "PYI", # flake8-pyi
+  "PT",  # flake8-pytest-style
+  "Q",   # flake8-quotes
+  "RSE", # flake8-raise
+  "RET", # flake8-return
+  "SLF", # flake8-self
+  # "SIM", # flake8-simplify
+  "TID", # flake8-tidy-imports
+  # "TCH", # flake8-type-checking
+  # "ARG", # flake8-unused-arguments
+  "PTH", # flake8-use-pathlib
+  # "ERA", # eradicate
+  "PD",  # pandas-vet
+  "PGH", # pygrep-hooks
+  "PL",  # Pylint
+  "PLC", # Pylint Convention
+  "PLE", # Pylint Error
+  # "PLR", # Pylint Refactor
+  "PLW", # Pylint Warning
+  # "TRY", # tryceratops
+  "NPY", # NumPy-specific rules
+  # "RUF", # Ruff-specific rules
+]
+ignore = [
+  "PT001",   # Use `@pytest.fixture()` over `@pytest.fixture`
+  "PT004",   # Fixture `x` does not return anything, add leading underscore
+  "PLR0912", # Too many branches
+  "PLR0913", # Too many arguments to function call
+  "F401",    # `x` imported but unused
+]
+
+[tool.mypy]
+python_version = "3.12"
+exclude = [".venv"]
+follow_imports = "silent"
+warn_incomplete_stub = true
+warn_redundant_casts = true
+warn_unused_configs = true
+strict = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = "tests"
+norecursedirs = ".git"
+addopts = "--cov=custom_components"
