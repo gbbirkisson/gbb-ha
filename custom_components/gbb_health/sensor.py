@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime, timedelta
 from functools import cached_property
-from typing import Any, List, Mapping
+from typing import Any, Mapping, Set
 
 import aiohttp
 import voluptuous as vol
@@ -21,6 +21,7 @@ CONF_INTERVAL = "interval"
 CONF_GRACE_PERIOD = "grace_period"
 CONF_IGNORE = "ignore"
 CONF_REQUIRED = "required"
+CONF_INCLUDE = "include"
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
@@ -30,30 +31,42 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Optional(CONF_GRACE_PERIOD): cv.positive_time_period,
         vol.Optional(CONF_IGNORE): vol.All([str], vol.Length(min=0)),
         vol.Optional(CONF_REQUIRED): vol.All([str], vol.Length(min=0)),
+        vol.Optional(CONF_INCLUDE): vol.All([str], vol.Length(min=0)),
     }
 )
 
 
-def setup_platform(
+async def async_setup_platform(
     hass: HomeAssistant,
     config: ConfigType,
     async_add_entities: AddEntitiesCallback,
-    discovery_info: DiscoveryInfoType | None = None,
+    discovery: DiscoveryInfoType | None = None,
 ) -> None:
-    if discovery_info is not None:
+    if discovery and not config:
+        config = discovery
+
+    _LOGGER.debug(f"setup sensor: {config}")
+
+    try:
+        PLATFORM_SCHEMA(config)
+    except vol.Error as e:
+        _LOGGER.error(f"setup failed: {e}")
         return
 
-    _LOGGER.debug(f"adding sensor with: {config}")
-
-    id = config.get(CONF_ID) or "<FAIL>"
-    name = config.get(CONF_NAME) or "<FAIL>"
+    id = config.get(CONF_ID) or ""
+    name = config.get(CONF_NAME) or ""
     interval = config.get(CONF_INTERVAL) or timedelta(minutes=1)
     grace_period = config.get(CONF_GRACE_PERIOD) or timedelta(hours=1)
-    ignore = config.get(CONF_IGNORE) or []
-    required = config.get(CONF_REQUIRED) or []
+    ignore = set(config.get(CONF_IGNORE) or [])
+    required = set(config.get(CONF_REQUIRED) or [])
+    include = set(config.get(CONF_INCLUDE) or [])
 
     async_add_entities(
-        [HealthcheckSensor(hass, id, name, interval, grace_period, ignore, required)]
+        [
+            HealthcheckSensor(
+                hass, id, name, interval, grace_period, ignore, required, include
+            )
+        ]
     )
 
 
@@ -69,8 +82,9 @@ class HealthcheckSensor(SensorEntity):
         name: str,
         interval: timedelta,
         grace_period: timedelta,
-        ignore: List[str],
-        required: List[str],
+        ignore: Set[str],
+        required: Set[str],
+        include: Set[str],
     ) -> None:
         self._hass = hass
         self._name = name
@@ -78,7 +92,8 @@ class HealthcheckSensor(SensorEntity):
         self._interval = interval
         self._grace_period = grace_period
         self._ignore = ignore
-        self._required = set(required)
+        self._required = required
+        self._include = include
         self._state = 0
         self._extra_attributes: dict[str, list[str]] = {"missing": [], "failing": []}
 
@@ -100,6 +115,9 @@ class HealthcheckSensor(SensorEntity):
 
     async def _check(self, _: datetime | None = None) -> None:
         all = self._hass.states.async_all()
+        if self._include:
+            _LOGGER.debug(f"filtering entities to only match: {self._include}")
+            all = [s for s in all if s.entity_id in self._include]
 
         missing = list(self._required - set([s.entity_id for s in all if s.entity_id]))
         _LOGGER.debug(f"missing entities: {missing}")
@@ -123,9 +141,14 @@ class HealthcheckSensor(SensorEntity):
 
         async with aiohttp.ClientSession() as session:
             url = f"{self._url}/{len(total)}"
-            _LOGGER.debug(f"hc call: {url}")
-            async with session.get(url, data=message) as res:
-                _LOGGER.debug(f"hc response: {res.status}")
+            status = -1
+            try:
+                async with session.get(url, data=message) as res:
+                    status = res.status
+            except aiohttp.ClientError as e:
+                _LOGGER.warning(f"hc exception: {e}")
+            finally:
+                _LOGGER.debug(f"hc call: {url} [{status}]")
 
         if len(total) > 0:
             _LOGGER.debug(f"create notification: {len(total)}")
