@@ -6,7 +6,14 @@
   "extra-label": "release",
   "packages": {
     ".": {
-      "release-type": "python"
+      "release-type": "python",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "custom_components/gbb_health/manifest.json",
+          "jsonpath": "$.version"
+        }
+      ]
     }
   }
 }

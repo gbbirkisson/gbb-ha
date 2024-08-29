@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gbb-ha"
-version = "0.1.0"
+version = "0.0.1"
 description = ""
 authors = ["Guðmundur Björn Birkisson <gbb@gbb.is>"]
 readme = "README.md"
