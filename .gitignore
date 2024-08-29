@@ -3,4 +3,5 @@
 .ruff_cache
 .venv
 .coverage*
+coverage.xml
 __pycache__

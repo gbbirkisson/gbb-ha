@@ -10,6 +10,11 @@ PLATFORMS = [Platform.SENSOR]
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up from yaml configuration."""
 
-    hass.async_create_task(discovery.async_load_platform(hass, "sensor", DOMAIN, {}, config))
+    if DOMAIN in config:
+        hass.async_create_task(
+            discovery.async_load_platform(
+                hass, Platform.SENSOR, DOMAIN, config[DOMAIN], config
+            )
+        )
 
     return True
