@@ -113,4 +113,4 @@ ignore_missing_imports = true
 asyncio_mode = "auto"
 testpaths = "tests"
 norecursedirs = ".git"
-addopts = "--cov=custom_components"
+addopts = "--cov-report xml --cov=custom_components"
