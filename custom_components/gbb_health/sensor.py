@@ -107,13 +107,13 @@ class HealthcheckSensor(SensorEntity):
 
     @override
     async def async_added_to_hass(self) -> None:
-        async_track_time_interval(self._hass, self._check, self._interval)
+        async_track_time_interval(self._hass, self.check, self._interval)
 
     @cached_property
     def extra_state_attributes(self) -> Mapping[str, Any] | None:
         return self._extra_attributes
 
-    async def _check(self, _: datetime | None = None) -> None:
+    async def check(self, _: datetime | None = None) -> None:
         all = self._hass.states.async_all()
         if self._include:
             _LOGGER.debug(f"filtering entities to only match: {self._include}")
@@ -139,8 +139,17 @@ class HealthcheckSensor(SensorEntity):
         self._state = len(total)
         message = "\n".join(total)
 
+        await self.ping(message, len(total))
+
+        if len(total) > 0:
+            _LOGGER.debug(f"create notification: {len(total)}")
+            await self.notify(message)
+
+        self.async_write_ha_state()
+
+    async def ping(self, message: str, count: int) -> None:
         async with aiohttp.ClientSession() as session:
-            url = f"{self._url}/{len(total)}"
+            url = f"{self._url}/{count}"
             status = -1
             try:
                 async with session.get(url, data=message) as res:
@@ -150,16 +159,13 @@ class HealthcheckSensor(SensorEntity):
             finally:
                 _LOGGER.debug(f"hc call: {url} [{status}]")
 
-        if len(total) > 0:
-            _LOGGER.debug(f"create notification: {len(total)}")
-            await self._hass.services.async_call(
-                "persistent_notification",
-                "create",
-                {
-                    "notification_id": self._name,
-                    "title": f"{self._name} failed",
-                    "message": message,
-                },
-            )
-
-        self.async_write_ha_state()
+    async def notify(self, message: str) -> None:
+        await self._hass.services.async_call(
+            "persistent_notification",
+            "create",
+            {
+                "notification_id": self._name,
+                "title": f"{self._name} failed",
+                "message": message,
+            },
+        )
