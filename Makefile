@@ -11,6 +11,10 @@ ${VENV}: poetry.toml poetry.lock
 test: ${VENV} ## Run tests with coverage
 	${BIN}/pytest --cov-report xml --cov=custom_components
 
+.PHONY: test
+test-filter: ${VENV} ## Run test with filter
+	${BIN}/pytest -k ${TEST}
+
 .PHONY: tox
 tox: ${VENV} ## Run tests on different HA versions
 	${BIN}/tox -p
