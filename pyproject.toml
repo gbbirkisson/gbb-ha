@@ -1,19 +1,19 @@
 [tool.poetry]
-name = "gbb-ha"
+name = "custom_components"
 version = "0.1.0"
 description = ""
 authors = ["Guðmundur Björn Birkisson <gbb@gbb.is>"]
 readme = "README.md"
-package-mode = false
 
 [tool.poetry.dependencies]
 python = ">=3.12,<3.13"
 
 [tool.poetry.group.dev.dependencies]
 pytest-cov = "^5.0.0"
-pytest-homeassistant-custom-component = "^0.13.154"
+pytest-homeassistant-custom-component = "0.13.157"
 ruff = "^0.6.2"
 mypy = "^1.11.1"
+tox = "^4.18.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -113,4 +113,3 @@ ignore_missing_imports = true
 asyncio_mode = "auto"
 testpaths = "tests"
 norecursedirs = ".git"
-addopts = "--cov-report xml --cov=custom_components"

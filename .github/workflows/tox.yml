@@ -1,5 +1,5 @@
 ---
-name: CI
+name: TOX
 
 on:
   workflow_call:
@@ -9,17 +9,18 @@ on:
       - main
 
 jobs:
-  ci:
-    name: Run ${{ matrix.target }}
+  tox:
+    name: Run HA ${{ matrix.target }} tests
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
         target:
-          - lint-mypy
-          - lint-ruff
-          - test
+          - 2024.8.0
+          - 2024.8.1
+          - 2024.8.2
+          - 2024.8.3
 
     steps:
       - name: Checkout
@@ -29,10 +30,4 @@ jobs:
         uses: jdx/mise-action@v2
 
       - name: Run ${{ matrix.target }}
-        run: make ${{ matrix.target }}
-
-      - name: Upload test coverage
-        uses: codecov/codecov-action@v4
-        if: matrix.target == 'test'
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: HA_VERSION=${{ matrix.target }} make tox-env

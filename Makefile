@@ -8,8 +8,16 @@ ${VENV}: poetry.toml poetry.lock
 	touch .venv
 
 .PHONY: test
-test: ${VENV} ## Run all tests
-	${BIN}/pytest
+test: ${VENV} ## Run tests with coverage
+	${BIN}/pytest --cov-report xml --cov=custom_components
+
+.PHONY: tox
+tox: ${VENV} ## Run tests on different HA versions
+	${BIN}/tox -p
+
+.PHONY: tox-env
+tox-env: ${VENV} ## Run tests on specific HA versions
+	${BIN}/tox run -e ${HA_VERSION}
 
 .PHONY: lint
 lint: lint-ruff lint-mypy ## Run all linters
