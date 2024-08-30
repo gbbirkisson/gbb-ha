@@ -1,5 +1,6 @@
 {
   "name": "GBB HA component bundle",
   "render_readme": true,
+  "homeassistant": "2024.8.0",
   "iot_class": "cloud_polling"
 }
