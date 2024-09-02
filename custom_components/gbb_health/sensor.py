@@ -13,6 +13,8 @@ from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from typing_extensions import override
 
+from custom_components import wildcard_filter
+
 _LOGGER = logging.getLogger(__name__)
 
 CONF_NAME = "name"
@@ -115,9 +117,12 @@ class HealthcheckSensor(SensorEntity):
 
     async def check(self, _: datetime | None = None) -> None:
         all = self._hass.states.async_all()
+
+        # filter out everything except those to include
         if self._include:
             _LOGGER.debug(f"filtering entities to only match: {self._include}")
-            all = [s for s in all if s.entity_id in self._include]
+            m, _n = wildcard_filter([s.entity_id for s in all], self._include)
+            all = [s for s in all if s.entity_id in m]
 
         missing = list(self._required - set([s.entity_id for s in all if s.entity_id]))
         _LOGGER.debug(f"missing entities: {missing}")
@@ -125,8 +130,15 @@ class HealthcheckSensor(SensorEntity):
         missing = [f"Entity ({s}): missing" for s in missing]
 
         failing = [s for s in all if s.state in ["unavailable", "unknown", "none"]]
-        failing = [s for s in failing if s.entity_id not in self._ignore]
+
+        # filter out those to ignore
+        if self._ignore:
+            _m, n = wildcard_filter([s.entity_id for s in failing], self._ignore)
+            failing = [s for s in failing if s.entity_id in n]
+
+        # filter out those that are within the grace period
         failing = [s for s in failing if _now() - s.last_updated > self._grace_period]
+
         _LOGGER.debug(f"failing entities: {failing}")
         self._extra_attributes.update({"failing": [s.entity_id for s in failing]})
         failing = [
