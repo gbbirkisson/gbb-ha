@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.0](https://github.com/gbbirkisson/gbb-ha/compare/v0.1.0...v0.2.0) (2024-09-02)
+
+
+### Features
+
+* **CI:** test different HA versions with tox ([#11](https://github.com/gbbirkisson/gbb-ha/issues/11)) ([52dd2ce](https://github.com/gbbirkisson/gbb-ha/commit/52dd2ce1f4fd42807648338e29fcdf03bcd04c74))
+* **healthcheck:** support wildcards in filters ([#15](https://github.com/gbbirkisson/gbb-ha/issues/15)) ([2e79519](https://github.com/gbbirkisson/gbb-ha/commit/2e7951918fcd302dbc039099f0607f21f84ff842))
+
+
+### Bug Fixes
+
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.158 ([#14](https://github.com/gbbirkisson/gbb-ha/issues/14)) ([c789dd9](https://github.com/gbbirkisson/gbb-ha/commit/c789dd97489531e8c3cb7c4b9a858ade3859b484))
+
 ## [0.1.0](https://github.com/gbbirkisson/gbb-ha/compare/v0.1.0...v0.1.0) (2024-08-29)
 
 
