@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/gbbirkisson/gbb-ha/compare/v0.2.0...v0.2.1) (2024-09-02)
+
+
+### Bug Fixes
+
+* fix broken import ([#16](https://github.com/gbbirkisson/gbb-ha/issues/16)) ([3f0327e](https://github.com/gbbirkisson/gbb-ha/commit/3f0327e29f362b3f5b20d8af72e411c8daa75d52))
+
 ## [0.2.0](https://github.com/gbbirkisson/gbb-ha/compare/v0.1.0...v0.2.0) (2024-09-02)
 
 
