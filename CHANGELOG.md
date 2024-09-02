@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/gbbirkisson/gbb-ha/compare/v0.2.1...v0.2.2) (2024-09-02)
+
+
+### Bug Fixes
+
+* add checked field to attributes and payload ([#18](https://github.com/gbbirkisson/gbb-ha/issues/18)) ([29d9f6a](https://github.com/gbbirkisson/gbb-ha/commit/29d9f6a519abd6bd49c295a38b81ac7253752646))
+
 ## [0.2.1](https://github.com/gbbirkisson/gbb-ha/compare/v0.2.0...v0.2.1) (2024-09-02)
 
 
