@@ -104,7 +104,11 @@ class HealthcheckSensor(SensorEntity):
         self._required = required
         self._include = include
         self._state = 0
-        self._extra_attributes: dict[str, list[str]] = {"missing": [], "failing": []}
+        self._extra_attributes: dict[str, Any] = {
+            "missing": [],
+            "failing": [],
+            "checked": 0,
+        }
 
     @cached_property
     def name(self) -> str:
@@ -131,20 +135,24 @@ class HealthcheckSensor(SensorEntity):
             m, _n = wildcard_filter([s.entity_id for s in all], self._include)
             all = [s for s in all if s.entity_id in m]
 
+        # filter out those to ignore
+        if self._ignore:
+            _m, n = wildcard_filter([s.entity_id for s in all], self._ignore)
+            all = [s for s in all if s.entity_id in n]
+
+        self._extra_attributes.update({"checked": len(all)})
+
+        # mark those that are failing
+        failing = [s for s in all if s.state in ["unavailable", "unknown", "none"]]
+
+        # filter out those that are within the grace period
+        failing = [s for s in failing if _now() - s.last_updated > self._grace_period]
+
+        # find missing
         missing = list(self._required - set([s.entity_id for s in all if s.entity_id]))
         _LOGGER.debug(f"missing entities: {missing}")
         self._extra_attributes.update({"missing": missing})
         missing = [f"Entity ({s}): missing" for s in missing]
-
-        failing = [s for s in all if s.state in ["unavailable", "unknown", "none"]]
-
-        # filter out those to ignore
-        if self._ignore:
-            _m, n = wildcard_filter([s.entity_id for s in failing], self._ignore)
-            failing = [s for s in failing if s.entity_id in n]
-
-        # filter out those that are within the grace period
-        failing = [s for s in failing if _now() - s.last_updated > self._grace_period]
 
         _LOGGER.debug(f"failing entities: {failing}")
         self._extra_attributes.update({"failing": [s.entity_id for s in failing]})
@@ -157,6 +165,8 @@ class HealthcheckSensor(SensorEntity):
 
         self._state = len(total)
         message = "\n".join(total)
+        if self._state == 0:
+            message = f"checked {len(all)}"
 
         await self.ping(message, len(total))
 
