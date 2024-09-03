@@ -88,7 +88,7 @@ async def test_gbb_health_all_good(
 
     await t.check(None)
     notify.assert_not_called()
-    ping.assert_called_with("checked 3", 0)
+    ping.assert_called_with("checked: 3\nfiltered: 0", 0)
 
 
 async def test_gbb_health_one_down(
@@ -174,7 +174,7 @@ async def test_gbb_health_ignored_down(
 
     await t.check(None)
     notify.assert_not_called()
-    ping.assert_called_with("checked 2", 0)
+    ping.assert_called_with("checked: 2\nfiltered: 1", 0)
 
 
 async def test_gbb_health_required_present(
@@ -198,7 +198,7 @@ async def test_gbb_health_required_present(
 
     await t.check(None)
     notify.assert_not_called()
-    ping.assert_called_with("checked 3", 0)
+    ping.assert_called_with("checked: 3\nfiltered: 0", 0)
 
 
 async def test_gbb_health_required_missing(
@@ -249,7 +249,7 @@ async def test_gbb_health_include_ok(
 
     await t.check(None)
     notify.assert_not_called()
-    ping.assert_called_with("checked 2", 0)
+    ping.assert_called_with("checked: 2\nfiltered: 1", 0)
 
 
 @patch("custom_components.gbb_health.sensor.HealthcheckSensor.notify")
@@ -284,7 +284,9 @@ async def test_gbb_health_http_request(
 
     # All good
     await t.check(None)
-    session.get.assert_called_with("https://hc-ping.com/test/0", data="checked 3")
+    session.get.assert_called_with(
+        "https://hc-ping.com/test/0", data="checked: 3\nfiltered: 0"
+    )
     session.get.reset_mock()
     mock_notify.assert_not_called()
     mock_notify.reset_mock()
