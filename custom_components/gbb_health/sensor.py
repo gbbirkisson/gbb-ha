@@ -108,6 +108,7 @@ class HealthcheckSensor(SensorEntity):
             "missing": [],
             "failing": [],
             "checked": 0,
+            "filtered": 0,
         }
 
     @cached_property
@@ -128,6 +129,7 @@ class HealthcheckSensor(SensorEntity):
 
     async def check(self, _: datetime | None = None) -> None:
         all = self._hass.states.async_all()
+        all_count_before_filter = len(all)
 
         # filter out everything except those to include
         if self._include:
@@ -140,7 +142,12 @@ class HealthcheckSensor(SensorEntity):
             _m, n = wildcard_filter([s.entity_id for s in all], self._ignore)
             all = [s for s in all if s.entity_id in n]
 
-        self._extra_attributes.update({"checked": len(all)})
+        self._extra_attributes.update(
+            {
+                "checked": len(all),
+                "filtered": all_count_before_filter - len(all),
+            }
+        )
 
         # mark those that are failing
         failing = [s for s in all if s.state in ["unavailable", "unknown", "none"]]
@@ -166,7 +173,9 @@ class HealthcheckSensor(SensorEntity):
         self._state = len(total)
         message = "\n".join(total)
         if self._state == 0:
-            message = f"checked {len(all)}"
+            message = (
+                f"checked: {len(all)}\nfiltered: {all_count_before_filter - len(all)}"
+            )
 
         await self.ping(message, len(total))
 
