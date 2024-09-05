@@ -12,6 +12,11 @@
           "type": "json",
           "path": "custom_components/gbb_health/manifest.json",
           "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": "custom_components/gbb_thermostat/manifest.json",
+          "jsonpath": "$.version"
         }
       ]
     }

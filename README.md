@@ -43,6 +43,7 @@ $ make
 Makefile targets:
   ci            Run all CI steps
   test          Run tests with coverage
+  test-filter   Run test with filter
   tox           Run tests on different HA versions
   tox-env       Run tests on specific HA versions
   lint          Run all linters

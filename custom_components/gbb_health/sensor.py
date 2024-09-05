@@ -2,7 +2,7 @@ import fnmatch
 import logging
 from datetime import datetime, timedelta
 from functools import cached_property
-from typing import Any, Mapping, Set
+from typing import Any, Mapping, Set, cast
 
 import aiohttp
 import voluptuous as vol
@@ -54,8 +54,8 @@ async def async_setup_platform(
         _LOGGER.error(f"setup failed: {e}")
         return
 
-    id = config.get(CONF_ID) or ""
-    name = config.get(CONF_NAME) or ""
+    id = cast(str, config.get(CONF_ID))
+    name = cast(str, config.get(CONF_NAME))
     interval = config.get(CONF_INTERVAL) or timedelta(minutes=1)
     grace_period = config.get(CONF_GRACE_PERIOD) or timedelta(hours=1)
     ignore = set(config.get(CONF_IGNORE) or [])
