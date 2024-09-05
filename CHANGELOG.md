@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.3.0](https://github.com/gbbirkisson/gbb-ha/compare/v0.2.2...v0.3.0) (2024-09-05)
+
+
+### Features
+
+* add thermostat component ([#13](https://github.com/gbbirkisson/gbb-ha/issues/13)) ([01faa82](https://github.com/gbbirkisson/gbb-ha/commit/01faa82a8b01e0e38d732fbc9a1ae45cda61b07e))
+
+
+### Bug Fixes
+
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.159 ([#20](https://github.com/gbbirkisson/gbb-ha/issues/20)) ([adb2783](https://github.com/gbbirkisson/gbb-ha/commit/adb2783f519b8810d5316bf29f8a5cf443878a90))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.161 ([#24](https://github.com/gbbirkisson/gbb-ha/issues/24)) ([260e003](https://github.com/gbbirkisson/gbb-ha/commit/260e003a944e4008794897fd74dd17db21991ac5))
+* **deps:** update dependency ruff to v0.6.4 ([#27](https://github.com/gbbirkisson/gbb-ha/issues/27)) ([a10e0ad](https://github.com/gbbirkisson/gbb-ha/commit/a10e0ad843cc3140f479763e9e61d6020bd205ee))
+* **deps:** update homeassistant/home-assistant docker tag to v2024.9.0 ([#25](https://github.com/gbbirkisson/gbb-ha/issues/25)) ([aad08b8](https://github.com/gbbirkisson/gbb-ha/commit/aad08b839edb8b1795b45b824096030c7a0c7ab2))
+* **HA:** add tests for 2024.9.0 ([#26](https://github.com/gbbirkisson/gbb-ha/issues/26)) ([4fd6476](https://github.com/gbbirkisson/gbb-ha/commit/4fd6476ab96d46cf08020223c39584fda54fa8a4))
+* **healthcheck:** add filtered to attributes and message ([#22](https://github.com/gbbirkisson/gbb-ha/issues/22)) ([3fad0f9](https://github.com/gbbirkisson/gbb-ha/commit/3fad0f99342215b2eb748fb0ca58ff6503df062c))
+
+
+### Documentation
+
+* update readme ([#23](https://github.com/gbbirkisson/gbb-ha/issues/23)) ([6e9c82e](https://github.com/gbbirkisson/gbb-ha/commit/6e9c82e3fe91f0c249da36ae3243f5294165d966))
+
 ## [0.2.2](https://github.com/gbbirkisson/gbb-ha/compare/v0.2.1...v0.2.2) (2024-09-02)
 
 
