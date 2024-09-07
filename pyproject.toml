@@ -10,7 +10,7 @@ python = ">=3.12,<3.13"
 
 [tool.poetry.group.dev.dependencies]
 pytest-cov = "^5.0.0"
-pytest-homeassistant-custom-component = "0.13.161"
+pytest-homeassistant-custom-component = "0.13.162"
 ruff = "^0.6.2"
 mypy = "^1.11.1"
 tox = "^4.18.0"
