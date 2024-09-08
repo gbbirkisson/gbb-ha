@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.1](https://github.com/gbbirkisson/gbb-ha/compare/v0.3.0...v0.3.1) (2024-09-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.162 ([#30](https://github.com/gbbirkisson/gbb-ha/issues/30)) ([fc3a2d1](https://github.com/gbbirkisson/gbb-ha/commit/fc3a2d152b6e3e0f0b4bb36f4947684f1846ed5b))
+* **deps:** update dependency tox to v4.18.1 ([#31](https://github.com/gbbirkisson/gbb-ha/issues/31)) ([27520ce](https://github.com/gbbirkisson/gbb-ha/commit/27520ceb78eb11e278266c35a22863be4e5f3c1e))
+* **deps:** update homeassistant/home-assistant docker tag to v2024.9.1 ([#28](https://github.com/gbbirkisson/gbb-ha/issues/28)) ([f611ef9](https://github.com/gbbirkisson/gbb-ha/commit/f611ef9461b0e14f79e694ed5f99400644d0a699))
+
 ## [0.3.0](https://github.com/gbbirkisson/gbb-ha/compare/v0.2.2...v0.3.0) (2024-09-05)
 
 
