@@ -51,11 +51,8 @@ from homeassistant.helpers.event import (
     async_track_state_change_event,
     async_track_time_interval,
 )
-from homeassistant.helpers.reload import async_setup_reload_service
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from typing_extensions import override
-
-from . import DOMAIN, PLATFORMS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -98,14 +95,15 @@ async def async_setup_platform(
     hass: HomeAssistant,
     config: ConfigType,
     async_add_entities: AddEntitiesCallback,
-    discovery: DiscoveryInfoType | None = None,
+    _: DiscoveryInfoType | None = None,
 ) -> None:
-    if discovery and not config:
-        config = discovery
+    _LOGGER.debug(f"setup climate: {config}")
 
-    _LOGGER.debug(f"setup sensor: {config}")
-
-    await async_setup_reload_service(hass, DOMAIN, PLATFORMS)
+    try:
+        PLATFORM_SCHEMA(config)
+    except vol.Error as e:
+        _LOGGER.error(f"setup failed: {e}")
+        return
 
     name = cast(str, config.get(CONF_NAME))
     heater_entity_id = cast(str, config.get(CONF_HEATER))
@@ -324,6 +322,7 @@ class Thermostat(GenericThermostat):
         if self._is_fallback_mode_active:
             async with self._temp_lock:
                 device_active = self._is_device_active
+                print(f"device {device_active}")
                 if device_active:
                     current_state = STATE_ON
                     for_how_long = self._fallback_on_duration

@@ -19,6 +19,7 @@ jobs:
         target:
           - lint-mypy
           - lint-ruff
+          - lint-imports
           - test
 
     steps:

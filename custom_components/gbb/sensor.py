@@ -1,4 +1,3 @@
-import fnmatch
 import logging
 from datetime import datetime, timedelta
 from functools import cached_property
@@ -13,6 +12,8 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from typing_extensions import override
+
+from . import wildcard_filter
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -41,11 +42,8 @@ async def async_setup_platform(
     hass: HomeAssistant,
     config: ConfigType,
     async_add_entities: AddEntitiesCallback,
-    discovery: DiscoveryInfoType | None = None,
+    _: DiscoveryInfoType | None = None,
 ) -> None:
-    if discovery and not config:
-        config = discovery
-
     _LOGGER.debug(f"setup sensor: {config}")
 
     try:
@@ -69,14 +67,6 @@ async def async_setup_platform(
             )
         ]
     )
-
-
-def wildcard_filter(all: list[str], patterns: set[str]) -> tuple[set[str], set[str]]:
-    match = set([])
-    for p in patterns:
-        match.update(fnmatch.filter(all, p))
-    no_match = set(all) - match
-    return match, no_match
 
 
 def _now() -> datetime:

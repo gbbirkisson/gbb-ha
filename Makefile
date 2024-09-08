@@ -24,7 +24,7 @@ tox-env: ${VENV} ## Run tests on specific HA versions
 	${BIN}/tox run -e ${HA_VERSION}
 
 .PHONY: lint
-lint: lint-ruff lint-mypy ## Run all linters
+lint: lint-ruff lint-mypy lint-imports ## Run all linters
 
 .PHONY: lint-ruff
 lint-ruff: ${VENV} ## Lint with ruff
@@ -33,6 +33,10 @@ lint-ruff: ${VENV} ## Lint with ruff
 .PHONY: lint-mypy
 lint-mypy: ${VENV} ## Lint with mypy
 	${BIN}/mypy .
+
+.PHONY: lint-imports
+lint-imports: ## Lint imports
+	bash -c 'grep -r --include="*.py" "custom_components" custom_components >/dev/null && exit 1 || exit 0'
 
 .PHONY: d-up
 d-up: ## Docker compose reboot and tail logs

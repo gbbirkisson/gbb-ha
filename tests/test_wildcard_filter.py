@@ -1,4 +1,4 @@
-from custom_components.gbb_health.sensor import wildcard_filter
+from custom_components.gbb import wildcard_filter
 
 
 def test_normal_case() -> None:

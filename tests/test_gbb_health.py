@@ -5,55 +5,48 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 from homeassistant.const import STATE_ON
 from homeassistant.core import HomeAssistant
-from homeassistant.setup import async_setup_component
+from pydantic import BaseModel
 from pytest import fixture
 
-from custom_components.gbb_health import DOMAIN
-from custom_components.gbb_health.sensor import HealthcheckSensor
-
-DEFAULT_CONFIG = {
-    DOMAIN: {
-        "platform": "sensor",
-        "id": "020166bc-5eb3-4a30-9f5a-356d15a3ee09",
-        "name": "Test",
-    }
-}
+from custom_components.gbb.sensor import HealthcheckSensor, async_setup_platform
 
 
-async def test_gbb_health_setup(hass: HomeAssistant) -> None:
-    with patch(
-        "custom_components.gbb_health.sensor.HealthcheckSensor.async_added_to_hass"
-    ) as add_timer:
-        assert await async_setup_component(hass, DOMAIN, DEFAULT_CONFIG) is True
-        await hass.async_block_till_done()
-        assert add_timer.called
+class Mocks(BaseModel):
+    ping: AsyncMock
+    notify: AsyncMock
+    write_state: MagicMock
+
+    class Config:
+        arbitrary_types_allowed = True
 
 
 @fixture
-async def mocked_healthcheck() -> (
-    AsyncGenerator[tuple[AsyncMock, AsyncMock, MagicMock], None]
-):
+async def test_data(hass: HomeAssistant) -> AsyncGenerator[Mocks, None]:
     with patch(
-        "custom_components.gbb_health.sensor.HealthcheckSensor.ping",
+        "custom_components.gbb.sensor.HealthcheckSensor.ping",
         new_callable=AsyncMock,
     ) as mock_ping, patch(
-        "custom_components.gbb_health.sensor.HealthcheckSensor.notify",
+        "homeassistant.core.ServiceRegistry.async_call",
         new_callable=AsyncMock,
     ) as mock_notify, patch(
-        "custom_components.gbb_health.sensor.HealthcheckSensor.async_write_ha_state",
+        "custom_components.gbb.sensor.HealthcheckSensor.async_write_ha_state",
         new_callable=MagicMock,
     ) as mock_write_state:
         mock_ping.return_value = AsyncMock()
         mock_notify.return_value = AsyncMock()
         mock_write_state.return_value = AsyncMock()
 
-        yield mock_ping, mock_notify, mock_write_state
+        yield Mocks(
+            ping=mock_ping,
+            notify=mock_notify,
+            write_state=mock_write_state,
+        )
 
 
 @fixture
-async def mocked_sensors(
+async def test_sensors(
     hass: HomeAssistant,
-) -> AsyncGenerator[tuple[str, str, str], None]:
+) -> AsyncGenerator[list[str], None]:
     mock_sensor_1 = "sensor.mock_sensor_1"
     mock_sensor_2 = "sensor.mock_sensor_2"
     mock_sensor_3 = "sensor.mock_sensor_3"
@@ -64,17 +57,42 @@ async def mocked_sensors(
 
     await hass.async_block_till_done()
 
-    yield mock_sensor_1, mock_sensor_2, mock_sensor_3
+    yield [mock_sensor_1, mock_sensor_2, mock_sensor_3]
+
+
+async def test_setup_good(hass: HomeAssistant) -> None:
+    callback = MagicMock()
+    await async_setup_platform(
+        hass,
+        {
+            "platform": "sensor",
+            "id": "020166bc-5eb3-4a30-9f5a-356d15a3ee09",
+            "name": "Test",
+        },
+        callback,
+        None,
+    )
+    callback.assert_called_once()
+
+
+async def test_setup_bad(hass: HomeAssistant) -> None:
+    callback = MagicMock()
+    await async_setup_platform(
+        hass,
+        {
+            "bad": "key",
+        },
+        callback,
+        None,
+    )
+    callback.assert_not_called()
 
 
 async def test_gbb_health_all_good(
     hass: HomeAssistant,
-    mocked_healthcheck: tuple[AsyncMock, AsyncMock, MagicMock],
-    mocked_sensors: tuple[str, str, str],
+    test_data: Mocks,
+    test_sensors: list[str],
 ) -> None:
-    ping, notify, _ = mocked_healthcheck
-    _, _, _ = mocked_sensors
-
     t = HealthcheckSensor(
         hass,
         "test",
@@ -85,21 +103,20 @@ async def test_gbb_health_all_good(
         set(),
         set(),
     )
+    assert t.name == "test"
+    assert t.state == 0
 
     await t.check(None)
-    notify.assert_not_called()
-    ping.assert_called_with("checked: 3\nfiltered: 0", 0)
+    test_data.notify.assert_not_called()
+    test_data.ping.assert_called_with("checked: 3\nfiltered: 0", 0)
 
 
 async def test_gbb_health_one_down(
     hass: HomeAssistant,
-    mocked_healthcheck: tuple[AsyncMock, AsyncMock, MagicMock],
-    mocked_sensors: tuple[str, str, str],
+    test_data: Mocks,
+    test_sensors: list[str],
 ) -> None:
-    ping, notify, _ = mocked_healthcheck
-    sen1, _, _ = mocked_sensors
-
-    hass.states.async_set(sen1, "unavailable")
+    hass.states.async_set(test_sensors[0], "unavailable")
     await hass.async_block_till_done()
 
     t = HealthcheckSensor(
@@ -114,21 +131,18 @@ async def test_gbb_health_one_down(
     )
 
     await t.check(None)
-    notify.assert_called()
-    ping.assert_called_with("Entity (sensor.mock_sensor_1): 0:00:00", 1)
+    test_data.notify.assert_called()
+    test_data.ping.assert_called_with("Entity (sensor.mock_sensor_1): 0:00:00", 1)
 
 
 async def test_gbb_health_all_down(
     hass: HomeAssistant,
-    mocked_healthcheck: tuple[AsyncMock, AsyncMock, MagicMock],
-    mocked_sensors: tuple[str, str, str],
+    test_data: Mocks,
+    test_sensors: list[str],
 ) -> None:
-    ping, notify, _ = mocked_healthcheck
-    sen1, sen2, sen3 = mocked_sensors
-
-    hass.states.async_set(sen1, "unavailable")
-    hass.states.async_set(sen2, "unknown")
-    hass.states.async_set(sen3, "none")
+    hass.states.async_set(test_sensors[0], "unavailable")
+    hass.states.async_set(test_sensors[1], "unknown")
+    hass.states.async_set(test_sensors[2], "none")
     await hass.async_block_till_done()
 
     t = HealthcheckSensor(
@@ -143,8 +157,8 @@ async def test_gbb_health_all_down(
     )
 
     await t.check(None)
-    notify.assert_called()
-    ping.assert_called_with(
+    test_data.notify.assert_called()
+    test_data.ping.assert_called_with(
         "Entity (sensor.mock_sensor_1): 0:00:00\nEntity (sensor.mock_sensor_2): 0:00:00\nEntity (sensor.mock_sensor_3): 0:00:00",
         3,
     )
@@ -152,13 +166,10 @@ async def test_gbb_health_all_down(
 
 async def test_gbb_health_ignored_down(
     hass: HomeAssistant,
-    mocked_healthcheck: tuple[AsyncMock, AsyncMock, MagicMock],
-    mocked_sensors: tuple[str, str, str],
+    test_data: Mocks,
+    test_sensors: list[str],
 ) -> None:
-    ping, notify, _ = mocked_healthcheck
-    sen1, _, _ = mocked_sensors
-
-    hass.states.async_set(sen1, "unavailable")
+    hass.states.async_set(test_sensors[0], "unavailable")
     await hass.async_block_till_done()
 
     t = HealthcheckSensor(
@@ -167,24 +178,21 @@ async def test_gbb_health_ignored_down(
         "test",
         timedelta(minutes=1),
         timedelta(seconds=0),
-        set([sen1]),
+        set([test_sensors[0]]),
         set(),
         set(),
     )
 
     await t.check(None)
-    notify.assert_not_called()
-    ping.assert_called_with("checked: 2\nfiltered: 1", 0)
+    test_data.notify.assert_not_called()
+    test_data.ping.assert_called_with("checked: 2\nfiltered: 1", 0)
 
 
 async def test_gbb_health_required_present(
     hass: HomeAssistant,
-    mocked_healthcheck: tuple[AsyncMock, AsyncMock, MagicMock],
-    mocked_sensors: tuple[str, str, str],
+    test_data: Mocks,
+    test_sensors: list[str],
 ) -> None:
-    ping, notify, _ = mocked_healthcheck
-    sen1, _, _ = mocked_sensors
-
     t = HealthcheckSensor(
         hass,
         "test",
@@ -192,23 +200,20 @@ async def test_gbb_health_required_present(
         timedelta(minutes=1),
         timedelta(seconds=0),
         set(),
-        set([sen1]),
+        set([test_sensors[0]]),
         set(),
     )
 
     await t.check(None)
-    notify.assert_not_called()
-    ping.assert_called_with("checked: 3\nfiltered: 0", 0)
+    test_data.notify.assert_not_called()
+    test_data.ping.assert_called_with("checked: 3\nfiltered: 0", 0)
 
 
 async def test_gbb_health_required_missing(
     hass: HomeAssistant,
-    mocked_healthcheck: tuple[AsyncMock, AsyncMock, MagicMock],
-    mocked_sensors: tuple[str, str, str],
+    test_data: Mocks,
+    test_sensors: list[str],
 ) -> None:
-    ping, notify, _ = mocked_healthcheck
-    _, _, _ = mocked_sensors
-
     t = HealthcheckSensor(
         hass,
         "test",
@@ -221,19 +226,16 @@ async def test_gbb_health_required_missing(
     )
 
     await t.check(None)
-    notify.assert_called()
-    ping.assert_called_with("Entity (sensor.not_present): missing", 1)
+    test_data.notify.assert_called()
+    test_data.ping.assert_called_with("Entity (sensor.not_present): missing", 1)
 
 
 async def test_gbb_health_include_ok(
     hass: HomeAssistant,
-    mocked_healthcheck: tuple[AsyncMock, AsyncMock, MagicMock],
-    mocked_sensors: tuple[str, str, str],
+    test_data: Mocks,
+    test_sensors: list[str],
 ) -> None:
-    ping, notify, _ = mocked_healthcheck
-    sen1, sen2, sen3 = mocked_sensors
-
-    hass.states.async_set(sen1, "unavailable")
+    hass.states.async_set(test_sensors[0], "unavailable")
     await hass.async_block_till_done()
 
     t = HealthcheckSensor(
@@ -244,26 +246,24 @@ async def test_gbb_health_include_ok(
         timedelta(seconds=0),
         set(),
         set(),
-        set([sen2, sen3]),
+        set([test_sensors[1], test_sensors[2]]),
     )
 
     await t.check(None)
-    notify.assert_not_called()
-    ping.assert_called_with("checked: 2\nfiltered: 1", 0)
+    test_data.notify.assert_not_called()
+    test_data.ping.assert_called_with("checked: 2\nfiltered: 1", 0)
 
 
-@patch("custom_components.gbb_health.sensor.HealthcheckSensor.notify")
-@patch("custom_components.gbb_health.sensor.HealthcheckSensor.async_write_ha_state")
-@patch("custom_components.gbb_health.sensor.aiohttp.ClientSession")
+@patch("custom_components.gbb.sensor.HealthcheckSensor.notify")
+@patch("custom_components.gbb.sensor.HealthcheckSensor.async_write_ha_state")
+@patch("custom_components.gbb.sensor.aiohttp.ClientSession")
 async def test_gbb_health_http_request(
     mock_client_session: MagicMock,
     mock_write_state: MagicMock,
     mock_notify: MagicMock,
     hass: HomeAssistant,
-    mocked_sensors: tuple[str, str, str],
+    test_sensors: list[str],
 ) -> None:
-    sen1, sen2, sen3 = mocked_sensors
-
     session = MagicMock()
     session.get.return_value.__aenter__.return_value = SimpleNamespace(status=500)
     mock_client_session.return_value.__aenter__.return_value = session
@@ -292,7 +292,7 @@ async def test_gbb_health_http_request(
     mock_notify.reset_mock()
 
     # One sensor down
-    hass.states.async_set(sen1, "unavailable")
+    hass.states.async_set(test_sensors[0], "unavailable")
     await hass.async_block_till_done()
 
     await t.check(None)

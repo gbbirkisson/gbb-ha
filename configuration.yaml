@@ -6,21 +6,21 @@ frontend:
 
 logger:
   logs:
-    custom_components.gbb_health: debug
+    custom_components.gbb: debug
 
 # gbb_health
 sensor:
-  - platform: gbb_health
+  - platform: gbb
     id: 020166bc-5eb3-4a30-9f5a-356d15a3ee09
     name: Healthcheck
-    interval: 00:00:05
-    grace_period: 00:00:10
+    interval: 00:00:10
+    grace_period: 00:00:30
     # required:
     #   - gummi
     ignore:
       - person.admin
       - conversation.home_assistant
-      - tts.google_en_com
+      - tts.*
 
 # gbb_thermostat
 input_number:
@@ -50,7 +50,7 @@ template:
           {% endif %}
 
 climate:
-  - platform: gbb_thermostat
+  - platform: gbb
     name: Thermostat
     target_sensor: sensor.temperature
     heater: input_boolean.radiator
@@ -64,5 +64,5 @@ climate:
     initial_hvac_mode: "heat"
     precision: 1
     fallback_on_ratio: 0.2
-    fallback_interval: 00:01:00
+    fallback_interval: 00:00:30
     fallback_force_switch: input_boolean.force_fallback_mode
