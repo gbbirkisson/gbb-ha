@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "custom_components"
-version = "0.3.0"
+version = "0.3.1"
 description = ""
 authors = ["Guðmundur Björn Birkisson <gbb@gbb.is>"]
 readme = "README.md"
