@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0](https://github.com/gbbirkisson/gbb-ha/compare/v0.3.1...v0.4.0) (2024-09-09)
+
+
+### Features
+
+* add notify service ([#37](https://github.com/gbbirkisson/gbb-ha/issues/37)) ([eed6a92](https://github.com/gbbirkisson/gbb-ha/commit/eed6a92a8457454f86f58e418639bf439e28a719))
+* restructure project to work with hacs ([#34](https://github.com/gbbirkisson/gbb-ha/issues/34)) ([defe8c7](https://github.com/gbbirkisson/gbb-ha/commit/defe8c7df31f5a3652b53f22d1207682ead0526a))
+
+
+### Bug Fixes
+
+* **deps:** update dependency python to v3.12.6 ([#29](https://github.com/gbbirkisson/gbb-ha/issues/29)) ([538592b](https://github.com/gbbirkisson/gbb-ha/commit/538592bbb0588357a936e908af6c238a36b180f2))
+
 ## [0.3.1](https://github.com/gbbirkisson/gbb-ha/compare/v0.3.0...v0.3.1) (2024-09-08)
 
 
