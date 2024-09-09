@@ -100,7 +100,7 @@ async def async_setup_platform(
     _LOGGER.debug(f"Setup climate: {config}")
 
     try:
-        PLATFORM_SCHEMA(config)
+        config = PLATFORM_SCHEMA(config)
     except vol.Error as e:
         _LOGGER.error(f"Setup failed: {e}")
         return
