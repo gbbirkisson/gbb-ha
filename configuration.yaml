@@ -6,7 +6,9 @@ frontend:
 
 logger:
   logs:
-    custom_components.gbb: debug
+    custom_components.gbb.sensor: warning
+    custom_components.gbb.climate: warning
+    custom_components.gbb.notify: warning
 
 # gbb_health
 sensor:
@@ -20,6 +22,15 @@ sensor:
       - person.admin
       - conversation.home_assistant
       - tts.*
+
+# gbb_notify
+notify:
+  - platform: gbb
+    wraps: notify
+    delay: 00:00:04
+    default_rate_limit: 00:00:15
+    rate_limit:
+      asdf: 00:00:25
 
 # gbb_thermostat
 input_number:

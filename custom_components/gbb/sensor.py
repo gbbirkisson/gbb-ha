@@ -14,7 +14,7 @@ from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from typing_extensions import override
 
-from . import wildcard_filter
+from . import wildcard_filter, now
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -53,7 +53,7 @@ async def async_setup_platform(
     _LOGGER.debug(f"Setup sensor: {config}")
 
     try:
-        PLATFORM_SCHEMA(config)
+        config = PLATFORM_SCHEMA(config)
     except vol.Error as e:
         _LOGGER.error(f"Setup failed: {e}")
         return
@@ -73,10 +73,6 @@ async def async_setup_platform(
             )
         ]
     )
-
-
-def _now() -> datetime:
-    return datetime.now().astimezone()
 
 
 class HealthcheckSensor(SensorEntity):
@@ -153,7 +149,7 @@ class HealthcheckSensor(SensorEntity):
         ]
 
         # filter out those that are within the grace period
-        failing = [s for s in failing if _now() - s.last_updated > self._grace_period]
+        failing = [s for s in failing if now() - s.last_updated > self._grace_period]
 
         # find missing
         missing = list(self._required - set([s.entity_id for s in all if s.entity_id]))
@@ -164,7 +160,7 @@ class HealthcheckSensor(SensorEntity):
         _LOGGER.debug(f"Failing entities: {failing}")
         self._extra_attributes.update({"failing": [s.entity_id for s in failing]})
         failing = [
-            f"{s.attributes.get('friendly_name', 'Entity')} ({s.entity_id}): {str(_now() - s.last_updated)[:-7]}"
+            f"{s.attributes.get('friendly_name', 'Entity')} ({s.entity_id}): {str(now() - s.last_updated)[:-7]}"
             for s in failing
         ]
 
