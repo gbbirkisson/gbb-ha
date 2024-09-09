@@ -101,6 +101,33 @@ async def test_setup_good(hass: HomeAssistant) -> None:
     callback.assert_called_once()
 
 
+async def test_setup_bad_fallback(hass: HomeAssistant) -> None:
+    callback = MagicMock()
+    await async_setup_platform(
+        hass,
+        {
+            "platform": "climate",
+            "name": "Test",
+            "target_sensor": "sensor.temperature",
+            "heater": "input_boolean.radiator",
+            "min_temp": 16.0,
+            "max_temp": 24.0,
+            "ac_mode": False,
+            "target_temp": 20.0,
+            "hot_tolerance": 0.3,
+            "min_cycle_duration": timedelta(minutes=1),
+            "initial_hvac_mode": "heat",
+            "precision": 1,
+            "fallback_on_ratio": 20.0,
+            "fallback_interval": timedelta(minutes=1),
+            "fallback_force_switch": "input_boolean.force_fallback_mode",
+        },
+        callback,
+        None,
+    )
+    callback.assert_not_called()
+
+
 async def test_setup_bad(hass: HomeAssistant) -> None:
     callback = MagicMock()
     await async_setup_platform(

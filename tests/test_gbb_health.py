@@ -3,7 +3,12 @@ from types import SimpleNamespace
 from typing import AsyncGenerator
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from homeassistant.const import STATE_ON
+from homeassistant.const import (
+    ENTITY_MATCH_NONE,
+    STATE_ON,
+    STATE_UNAVAILABLE,
+    STATE_UNKNOWN,
+)
 from homeassistant.core import HomeAssistant
 from pydantic import BaseModel
 from pytest import fixture
@@ -67,7 +72,6 @@ async def test_setup_good(hass: HomeAssistant) -> None:
         {
             "platform": "sensor",
             "id": "020166bc-5eb3-4a30-9f5a-356d15a3ee09",
-            "name": "Test",
         },
         callback,
         None,
@@ -116,7 +120,7 @@ async def test_gbb_health_one_down(
     test_data: Mocks,
     test_sensors: list[str],
 ) -> None:
-    hass.states.async_set(test_sensors[0], "unavailable")
+    hass.states.async_set(test_sensors[0], STATE_UNAVAILABLE)
     await hass.async_block_till_done()
 
     t = HealthcheckSensor(
@@ -140,9 +144,9 @@ async def test_gbb_health_all_down(
     test_data: Mocks,
     test_sensors: list[str],
 ) -> None:
-    hass.states.async_set(test_sensors[0], "unavailable")
-    hass.states.async_set(test_sensors[1], "unknown")
-    hass.states.async_set(test_sensors[2], "none")
+    hass.states.async_set(test_sensors[0], STATE_UNAVAILABLE)
+    hass.states.async_set(test_sensors[1], STATE_UNKNOWN)
+    hass.states.async_set(test_sensors[2], ENTITY_MATCH_NONE)
     await hass.async_block_till_done()
 
     t = HealthcheckSensor(
@@ -169,7 +173,7 @@ async def test_gbb_health_ignored_down(
     test_data: Mocks,
     test_sensors: list[str],
 ) -> None:
-    hass.states.async_set(test_sensors[0], "unavailable")
+    hass.states.async_set(test_sensors[0], STATE_UNAVAILABLE)
     await hass.async_block_till_done()
 
     t = HealthcheckSensor(
@@ -235,7 +239,7 @@ async def test_gbb_health_include_ok(
     test_data: Mocks,
     test_sensors: list[str],
 ) -> None:
-    hass.states.async_set(test_sensors[0], "unavailable")
+    hass.states.async_set(test_sensors[0], STATE_UNAVAILABLE)
     await hass.async_block_till_done()
 
     t = HealthcheckSensor(
@@ -292,7 +296,7 @@ async def test_gbb_health_http_request(
     mock_notify.reset_mock()
 
     # One sensor down
-    hass.states.async_set(test_sensors[0], "unavailable")
+    hass.states.async_set(test_sensors[0], STATE_UNAVAILABLE)
     await hass.async_block_till_done()
 
     await t.check(None)

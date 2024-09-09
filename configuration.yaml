@@ -12,7 +12,6 @@ logger:
 sensor:
   - platform: gbb
     id: 020166bc-5eb3-4a30-9f5a-356d15a3ee09
-    name: Healthcheck
     interval: 00:00:10
     grace_period: 00:00:30
     # required:
@@ -51,7 +50,6 @@ template:
 
 climate:
   - platform: gbb
-    name: Thermostat
     target_sensor: sensor.temperature
     heater: input_boolean.radiator
     min_temp: 16
