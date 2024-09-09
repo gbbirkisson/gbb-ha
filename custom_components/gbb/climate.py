@@ -56,7 +56,7 @@ from typing_extensions import override
 
 _LOGGER = logging.getLogger(__name__)
 
-DEFAULT_NAME = "Fallback Generic Thermostat"
+DEFAULT_NAME = "GBB Thermostat"
 CONF_FALLBACK_ON_RATIO = "fallback_on_ratio"
 CONF_FALLBACK_INTERVAL = "fallback_interval"
 CONF_FALLBACK_FORCE_SWITCH = "fallback_force_switch"
@@ -97,12 +97,12 @@ async def async_setup_platform(
     async_add_entities: AddEntitiesCallback,
     _: DiscoveryInfoType | None = None,
 ) -> None:
-    _LOGGER.debug(f"setup climate: {config}")
+    _LOGGER.debug(f"Setup climate: {config}")
 
     try:
         PLATFORM_SCHEMA(config)
     except vol.Error as e:
-        _LOGGER.error(f"setup failed: {e}")
+        _LOGGER.error(f"Setup failed: {e}")
         return
 
     name = cast(str, config.get(CONF_NAME))
@@ -130,6 +130,13 @@ async def async_setup_platform(
         config.get(CONF_FALLBACK_INTERVAL) or datetime.timedelta(minutes=60),
     )
     fallback_force_switch_entity_id = cast(str, config.get(CONF_FALLBACK_FORCE_SWITCH))
+
+    if not (0 <= fallback_on_ratio and fallback_on_ratio <= 1):
+        _LOGGER.error(
+            "Value for fallback_on_ratio should be between 0 and 1 but is %s",
+            fallback_on_ratio,
+        )
+        return
 
     async_add_entities(
         [
@@ -185,7 +192,6 @@ class Thermostat(GenericThermostat):
         fallback_interval: datetime.timedelta,
         fallback_force_switch_entity_id: str,
     ):
-        """Initialize the thermostat."""
         super().__init__(
             hass,
             name,
@@ -215,16 +221,6 @@ class Thermostat(GenericThermostat):
         self._fallback_forced = False
         self._static_attributes = {}
 
-        if not fallback_on_ratio:
-            return
-
-        if not (0 <= fallback_on_ratio or fallback_on_ratio <= 1):
-            _LOGGER.warning(
-                "Value for fallback_on_ratio should be between 0 and 1 but is %s",
-                fallback_on_ratio,
-            )
-            return
-
         self._fallback_on_duration = datetime.timedelta(
             seconds=(fallback_interval.total_seconds() * fallback_on_ratio)
         )
@@ -251,7 +247,6 @@ class Thermostat(GenericThermostat):
 
     @override
     async def async_added_to_hass(self) -> None:
-        """Run when entity about to be added."""
         await super().async_added_to_hass()
 
         if self._fallback_interval:
@@ -274,7 +269,6 @@ class Thermostat(GenericThermostat):
     async def _async_control_heating(
         self, time: datetime.datetime | None = None, force: bool = False
     ) -> None:
-        """Check if we need to turn heating on or off if fallback mode is not on"""
         if not self._is_fallback_mode_active:
             await super()._async_control_heating(time=time, force=force)
 
@@ -292,7 +286,6 @@ class Thermostat(GenericThermostat):
 
     @override
     async def _async_sensor_changed(self, event: Event[EventStateChangedData]) -> None:
-        """Handle temperature changes."""
         new_state = event.data["new_state"]
         if new_state is not None and new_state.state not in (
             STATE_UNAVAILABLE,
@@ -318,11 +311,9 @@ class Thermostat(GenericThermostat):
     async def _async_control_fallback(
         self, time: datetime.datetime | None = None
     ) -> None:
-        """Turn heating on or off depending heater state"""
         if self._is_fallback_mode_active:
             async with self._temp_lock:
                 device_active = self._is_device_active
-                print(f"device {device_active}")
                 if device_active:
                     current_state = STATE_ON
                     for_how_long = self._fallback_on_duration
@@ -358,22 +349,20 @@ class Thermostat(GenericThermostat):
     async def _async_override_changed(
         self, event: Event[EventStateChangedData]
     ) -> None:
-        """User has enabled fallback override"""
         new_state = event.data["new_state"]
 
         if new_state is not None and new_state.state == STATE_ON:
             self._fallback_forced = True
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Fallback override enabled!",
             )
         else:
             self._fallback_forced = False
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Fallback override disabled!",
             )
         self.async_write_ha_state()
 
     @property
     def _is_fallback_mode_active(self) -> bool:
-        """If climate should run in fallback mode."""
         return self._fallback_forced or not self._sensor_available

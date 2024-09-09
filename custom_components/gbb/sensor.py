@@ -4,6 +4,7 @@ from functools import cached_property
 from typing import Any, Mapping, Set, cast
 
 import aiohttp
+from homeassistant.const import ENTITY_MATCH_NONE, STATE_UNAVAILABLE, STATE_UNKNOWN
 import voluptuous as vol
 from homeassistant.components.sensor import PLATFORM_SCHEMA, SensorEntity
 from homeassistant.core import HomeAssistant
@@ -17,6 +18,7 @@ from . import wildcard_filter
 
 _LOGGER = logging.getLogger(__name__)
 
+DEFAULT_NAME = "GBB Healthcheck"
 CONF_NAME = "name"
 CONF_ID = "id"
 CONF_INTERVAL = "interval"
@@ -28,12 +30,16 @@ CONF_INCLUDE = "include"
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
         vol.Required(CONF_ID): vol.All(str, vol.Length(min=36, max=36)),
-        vol.Required(CONF_NAME): vol.All(str, vol.Length(min=1)),
-        vol.Optional(CONF_INTERVAL): cv.positive_time_period,
-        vol.Optional(CONF_GRACE_PERIOD): cv.positive_time_period,
-        vol.Optional(CONF_IGNORE): vol.All([str], vol.Length(min=0)),
-        vol.Optional(CONF_REQUIRED): vol.All([str], vol.Length(min=0)),
-        vol.Optional(CONF_INCLUDE): vol.All([str], vol.Length(min=0)),
+        vol.Required(CONF_NAME, default=DEFAULT_NAME): vol.All(str, vol.Length(min=1)),
+        vol.Optional(
+            CONF_INTERVAL, default=timedelta(minutes=1)
+        ): cv.positive_time_period,
+        vol.Optional(
+            CONF_GRACE_PERIOD, default=timedelta(hours=1)
+        ): cv.positive_time_period,
+        vol.Optional(CONF_IGNORE, default=[]): vol.All([str], vol.Length(min=0)),
+        vol.Optional(CONF_REQUIRED, default=[]): vol.All([str], vol.Length(min=0)),
+        vol.Optional(CONF_INCLUDE, default=[]): vol.All([str], vol.Length(min=0)),
     }
 )
 
@@ -44,18 +50,18 @@ async def async_setup_platform(
     async_add_entities: AddEntitiesCallback,
     _: DiscoveryInfoType | None = None,
 ) -> None:
-    _LOGGER.debug(f"setup sensor: {config}")
+    _LOGGER.debug(f"Setup sensor: {config}")
 
     try:
         PLATFORM_SCHEMA(config)
     except vol.Error as e:
-        _LOGGER.error(f"setup failed: {e}")
+        _LOGGER.error(f"Setup failed: {e}")
         return
 
     id = cast(str, config.get(CONF_ID))
     name = cast(str, config.get(CONF_NAME))
-    interval = config.get(CONF_INTERVAL) or timedelta(minutes=1)
-    grace_period = config.get(CONF_GRACE_PERIOD) or timedelta(hours=1)
+    interval = cast(timedelta, config.get(CONF_INTERVAL))
+    grace_period = cast(timedelta, config.get(CONF_GRACE_PERIOD))
     ignore = set(config.get(CONF_IGNORE) or [])
     required = set(config.get(CONF_REQUIRED) or [])
     include = set(config.get(CONF_INCLUDE) or [])
@@ -123,7 +129,7 @@ class HealthcheckSensor(SensorEntity):
 
         # filter out everything except those to include
         if self._include:
-            _LOGGER.debug(f"filtering entities to only match: {self._include}")
+            _LOGGER.debug(f"Filtering entities to only match: {self._include}")
             m, _n = wildcard_filter([s.entity_id for s in all], self._include)
             all = [s for s in all if s.entity_id in m]
 
@@ -140,18 +146,22 @@ class HealthcheckSensor(SensorEntity):
         )
 
         # mark those that are failing
-        failing = [s for s in all if s.state in ["unavailable", "unknown", "none"]]
+        failing = [
+            s
+            for s in all
+            if s.state in [STATE_UNAVAILABLE, STATE_UNKNOWN, ENTITY_MATCH_NONE]
+        ]
 
         # filter out those that are within the grace period
         failing = [s for s in failing if _now() - s.last_updated > self._grace_period]
 
         # find missing
         missing = list(self._required - set([s.entity_id for s in all if s.entity_id]))
-        _LOGGER.debug(f"missing entities: {missing}")
+        _LOGGER.debug(f"Missing entities: {missing}")
         self._extra_attributes.update({"missing": missing})
         missing = [f"Entity ({s}): missing" for s in missing]
 
-        _LOGGER.debug(f"failing entities: {failing}")
+        _LOGGER.debug(f"Failing entities: {failing}")
         self._extra_attributes.update({"failing": [s.entity_id for s in failing]})
         failing = [
             f"{s.attributes.get('friendly_name', 'Entity')} ({s.entity_id}): {str(_now() - s.last_updated)[:-7]}"
@@ -170,7 +180,7 @@ class HealthcheckSensor(SensorEntity):
         await self.ping(message, len(total))
 
         if len(total) > 0:
-            _LOGGER.debug(f"create notification: {len(total)}")
+            _LOGGER.debug(f"Create notification: {len(total)}")
             await self.notify(message)
 
         self.async_write_ha_state()
@@ -183,9 +193,9 @@ class HealthcheckSensor(SensorEntity):
                 async with session.get(url, data=message) as res:
                     status = res.status
             except aiohttp.ClientError as e:
-                _LOGGER.warning(f"hc exception: {e}")
+                _LOGGER.warning(f"HC exception: {e}")
             finally:
-                _LOGGER.debug(f"hc call: {url} [{status}]")
+                _LOGGER.debug(f"HC call: {url} [{status}]")
 
     async def notify(self, message: str) -> None:
         await self._hass.services.async_call(
