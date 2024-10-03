@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.4.1](https://github.com/gbbirkisson/gbb-ha/compare/v0.4.0...v0.4.1) (2024-10-03)
+
+
+### Bug Fixes
+
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.163 ([#41](https://github.com/gbbirkisson/gbb-ha/issues/41)) ([721d995](https://github.com/gbbirkisson/gbb-ha/commit/721d995773584e2fafa83e6e02b60db467a24248))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.169 ([#47](https://github.com/gbbirkisson/gbb-ha/issues/47)) ([e4193b5](https://github.com/gbbirkisson/gbb-ha/commit/e4193b565e113f5944c69ece138da99cc7bcfc0b))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.171 ([#51](https://github.com/gbbirkisson/gbb-ha/issues/51)) ([9fd9ce8](https://github.com/gbbirkisson/gbb-ha/commit/9fd9ce8c5ca174ba89570f81271ce220d235c072))
+* **deps:** update dependency python to v3.12.7 ([#49](https://github.com/gbbirkisson/gbb-ha/issues/49)) ([68b967a](https://github.com/gbbirkisson/gbb-ha/commit/68b967a42f8de8507fac33f48b70dd7e83b545e7))
+* **deps:** update dependency ruff to v0.6.5 ([#38](https://github.com/gbbirkisson/gbb-ha/issues/38)) ([cb1e945](https://github.com/gbbirkisson/gbb-ha/commit/cb1e9456da576ca5bb488e834812ef769c1d01c7))
+* **deps:** update dependency ruff to v0.6.7 ([#45](https://github.com/gbbirkisson/gbb-ha/issues/45)) ([321db2a](https://github.com/gbbirkisson/gbb-ha/commit/321db2ae2a3ed4ae7cb95906f69bfd9182335653))
+* **deps:** update dependency ruff to v0.6.8 ([#48](https://github.com/gbbirkisson/gbb-ha/issues/48)) ([591dcef](https://github.com/gbbirkisson/gbb-ha/commit/591dcefce47eea8712b1f85b6bc52819ea5288fe))
+* **deps:** update dependency tox to v4.19.0 ([#43](https://github.com/gbbirkisson/gbb-ha/issues/43)) ([ea1039d](https://github.com/gbbirkisson/gbb-ha/commit/ea1039d8447e155dca3fdf77d8b46490ad504774))
+* **deps:** update dependency tox to v4.20.0 ([#44](https://github.com/gbbirkisson/gbb-ha/issues/44)) ([651d428](https://github.com/gbbirkisson/gbb-ha/commit/651d428b7db5e868628236ca5619214010ab6dcb))
+* **deps:** update dependency tox to v4.21.0 ([#50](https://github.com/gbbirkisson/gbb-ha/issues/50)) ([2a4d5a5](https://github.com/gbbirkisson/gbb-ha/commit/2a4d5a5ea292130c5778b714a30d5bbb3a90afdb))
+* **deps:** update dependency tox to v4.21.1 ([#52](https://github.com/gbbirkisson/gbb-ha/issues/52)) ([dbfd169](https://github.com/gbbirkisson/gbb-ha/commit/dbfd169ba592b31dddcb0602d08a5aecedc8b757))
+* **deps:** update homeassistant/home-assistant docker tag to v2024.10.0 ([#53](https://github.com/gbbirkisson/gbb-ha/issues/53)) ([1a84ec3](https://github.com/gbbirkisson/gbb-ha/commit/1a84ec3541229dabec2604d1836dae96fcc0a279))
+* **deps:** update homeassistant/home-assistant docker tag to v2024.9.2 ([#40](https://github.com/gbbirkisson/gbb-ha/issues/40)) ([d73667e](https://github.com/gbbirkisson/gbb-ha/commit/d73667e2da4c05580a89dc6f92604426cfc85d50))
+* **deps:** update homeassistant/home-assistant docker tag to v2024.9.3 ([#46](https://github.com/gbbirkisson/gbb-ha/issues/46)) ([6187cb5](https://github.com/gbbirkisson/gbb-ha/commit/6187cb51b63440127a78bf23c6f23400879a3bfd))
+
 ## [0.4.0](https://github.com/gbbirkisson/gbb-ha/compare/v0.3.1...v0.4.0) (2024-09-09)
 
 
