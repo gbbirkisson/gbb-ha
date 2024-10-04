@@ -1,9 +1,9 @@
+.coverage*
 .mypy_cache
 .pytest_cache
 .ruff_cache
 .tox
 .venv
-.coverage*
-coverage.xml
 __pycache__
-.null-ls*
+*.egg-info
+coverage.xml

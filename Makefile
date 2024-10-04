@@ -1,11 +1,13 @@
 VENV:=.venv
 BIN:=${VENV}/bin
+TOX:=$(shell uv tool dir)/tox/bin/tox
 
 ci: lint test ## Run all CI steps
 
-${VENV}: poetry.toml poetry.lock
-	poetry install
-	touch .venv
+${VENV}: pyproject.toml uv.lock
+	uv python install
+	uv venv .venv
+	uv sync
 
 .PHONY: test
 test: ${VENV} ## Run tests with coverage
@@ -15,13 +17,16 @@ test: ${VENV} ## Run tests with coverage
 test-filter: ${VENV} ## Run test with filter
 	${BIN}/pytest -k ${TEST}
 
+${TOX}: ${VENV}
+	uv tool install tox --with tox-uv
+
 .PHONY: tox
-tox: ${VENV} ## Run tests on different HA versions
-	${BIN}/tox -p
+tox: ${TOX} ## Run tests on different HA versions
+	${TOX} -p
 
 .PHONY: tox-env
-tox-env: ${VENV} ## Run tests on specific HA versions
-	${BIN}/tox run -e ${HA_VERSION}
+tox-env: ${TOX} ## Run tests on specific HA versions
+	${TOX} run -e ${HA_VERSION}
 
 .PHONY: lint
 lint: lint-ruff lint-mypy lint-imports ## Run all linters
