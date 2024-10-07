@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.2](https://github.com/gbbirkisson/gbb-ha/compare/v0.4.1...v0.4.2) (2024-10-07)
+
+
+### Bug Fixes
+
+* **deps:** update homeassistant/home-assistant docker tag to v2024.10.1 ([#59](https://github.com/gbbirkisson/gbb-ha/issues/59)) ([9b6ed52](https://github.com/gbbirkisson/gbb-ha/commit/9b6ed52a56410739b6b4df1484926f5c36e9c44e))
+* use uv instead of poetry ([#56](https://github.com/gbbirkisson/gbb-ha/issues/56)) ([3171088](https://github.com/gbbirkisson/gbb-ha/commit/3171088ab55823dc43f1a03e58d7827b8e7dde08))
+
 ## [0.4.1](https://github.com/gbbirkisson/gbb-ha/compare/v0.4.0...v0.4.1) (2024-10-03)
 
 
