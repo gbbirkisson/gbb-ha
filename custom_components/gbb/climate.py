@@ -3,7 +3,6 @@ from __future__ import annotations
 import datetime
 import logging
 from collections.abc import Mapping
-from functools import cached_property
 from typing import Any, cast
 
 import homeassistant.helpers.config_validation as cv
@@ -272,7 +271,7 @@ class Thermostat(GenericThermostat):
         if not self._is_fallback_mode_active:
             await super()._async_control_heating(time=time, force=force)
 
-    @cached_property
+    @property
     def extra_state_attributes(self) -> Mapping[str, Any] | None:
         self._static_attributes.update(
             {

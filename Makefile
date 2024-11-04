@@ -2,6 +2,8 @@ VENV:=.venv
 BIN:=${VENV}/bin
 TOX:=$(shell uv tool dir)/tox/bin/tox
 
+SRC:=$(shell find custom_components/gbb -type f -name "*.py") $(shell find tests -type f -name "*.py")
+
 ci: lint test ## Run all CI steps
 
 ${VENV}: pyproject.toml uv.lock
@@ -33,11 +35,11 @@ lint: lint-ruff lint-mypy lint-imports ## Run all linters
 
 .PHONY: lint-ruff
 lint-ruff: ${VENV} ## Lint with ruff
-	${BIN}/ruff check .
+	${BIN}/ruff check $(SRC)
 
 .PHONY: lint-mypy
 lint-mypy: ${VENV} ## Lint with mypy
-	${BIN}/mypy .
+	${BIN}/mypy $(SRC)
 
 .PHONY: lint-imports
 lint-imports: ## Lint imports

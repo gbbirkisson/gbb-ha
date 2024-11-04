@@ -6,6 +6,7 @@ frontend:
 
 logger:
   logs:
+    custom_components.gbb.binary_sensor: warning
     custom_components.gbb.sensor: warning
     custom_components.gbb.climate: warning
     custom_components.gbb.notify: warning
@@ -13,15 +14,26 @@ logger:
 # gbb_health
 sensor:
   - platform: gbb
-    id: 020166bc-5eb3-4a30-9f5a-356d15a3ee09
-    interval: 00:00:10
-    grace_period: 00:00:30
-    # required:
-    #   - gummi
-    ignore:
-      - person.admin
-      - conversation.home_assistant
-      - tts.*
+    healthcheck:
+      id: 020166bc-5eb3-4a30-9f5a-356d15a3ee09
+      interval: 00:00:10
+      grace_period: 00:00:30
+      # required:
+      #   - gummi
+      ignore:
+        - person.admin
+        - conversation.home_assistant
+        - tts.*
+  - platform: nordpool
+    region: "NO1"
+    currency: "NOK"
+
+binary_sensor:
+  - platform: gbb
+    nordpool:
+      sensor: sensor.nordpool_kwh_no1_nok_3_10_025
+      switch: input_boolean.nordpool_enable
+      knob: input_number.nordpool_knob
 
 # gbb_notify
 notify:
@@ -40,6 +52,12 @@ input_number:
     min: 0
     max: 40
     step: 1
+  nordpool_knob:
+    name: Nordpool Knob
+    initial: 1
+    min: 0
+    max: 2
+    step: 0.05
 
 input_boolean:
   radiator:
@@ -48,6 +66,8 @@ input_boolean:
     name: Force fallback
   simulate_unavailable:
     name: Simulate Unavailable
+  nordpool_enable:
+    name: Enable nordpool
 
 template:
   - sensor:

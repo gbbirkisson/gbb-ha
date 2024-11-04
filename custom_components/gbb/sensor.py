@@ -4,9 +4,9 @@ from functools import cached_property
 from typing import Any, Mapping, Set, cast
 
 import aiohttp
-from homeassistant.const import ENTITY_MATCH_NONE, STATE_UNAVAILABLE, STATE_UNKNOWN
 import voluptuous as vol
 from homeassistant.components.sensor import PLATFORM_SCHEMA, SensorEntity
+from homeassistant.const import ENTITY_MATCH_NONE, STATE_UNAVAILABLE, STATE_UNKNOWN
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -14,32 +14,42 @@ from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from typing_extensions import override
 
-from . import wildcard_filter, now
+from . import now, wildcard_filter
 
 _LOGGER = logging.getLogger(__name__)
 
 DEFAULT_NAME = "GBB Healthcheck"
 CONF_NAME = "name"
-CONF_ID = "id"
-CONF_INTERVAL = "interval"
-CONF_GRACE_PERIOD = "grace_period"
-CONF_IGNORE = "ignore"
-CONF_REQUIRED = "required"
-CONF_INCLUDE = "include"
+
+CONF_HEALTHCHECK = "healthcheck"
+CONF_HEALTHCHECK_ID = "id"
+CONF_HEALTHCHECK_INTERVAL = "interval"
+CONF_HEALTHCHECK_GRACE_PERIOD = "grace_period"
+CONF_HEALTCHECK_IGNORE = "ignore"
+CONF_HEALTHCHECK_REQUIRED = "required"
+CONF_HEALTHCHECK_INCLUDE = "include"
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
-        vol.Required(CONF_ID): vol.All(str, vol.Length(min=36, max=36)),
         vol.Required(CONF_NAME, default=DEFAULT_NAME): vol.All(str, vol.Length(min=1)),
-        vol.Optional(
-            CONF_INTERVAL, default=timedelta(minutes=1)
-        ): cv.positive_time_period,
-        vol.Optional(
-            CONF_GRACE_PERIOD, default=timedelta(hours=1)
-        ): cv.positive_time_period,
-        vol.Optional(CONF_IGNORE, default=[]): vol.All([str], vol.Length(min=0)),
-        vol.Optional(CONF_REQUIRED, default=[]): vol.All([str], vol.Length(min=0)),
-        vol.Optional(CONF_INCLUDE, default=[]): vol.All([str], vol.Length(min=0)),
+        vol.Optional(CONF_HEALTHCHECK): {
+            vol.Required(CONF_HEALTHCHECK_ID): vol.All(str, vol.Length(min=36, max=36)),
+            vol.Optional(
+                CONF_HEALTHCHECK_INTERVAL, default=timedelta(minutes=1)
+            ): cv.positive_time_period,
+            vol.Optional(
+                CONF_HEALTHCHECK_GRACE_PERIOD, default=timedelta(hours=1)
+            ): cv.positive_time_period,
+            vol.Optional(CONF_HEALTCHECK_IGNORE, default=[]): vol.All(
+                [str], vol.Length(min=0)
+            ),
+            vol.Optional(CONF_HEALTHCHECK_REQUIRED, default=[]): vol.All(
+                [str], vol.Length(min=0)
+            ),
+            vol.Optional(CONF_HEALTHCHECK_INCLUDE, default=[]): vol.All(
+                [str], vol.Length(min=0)
+            ),
+        },
     }
 )
 
@@ -58,21 +68,27 @@ async def async_setup_platform(
         _LOGGER.error(f"Setup failed: {e}")
         return
 
-    id = cast(str, config.get(CONF_ID))
     name = cast(str, config.get(CONF_NAME))
-    interval = cast(timedelta, config.get(CONF_INTERVAL))
-    grace_period = cast(timedelta, config.get(CONF_GRACE_PERIOD))
-    ignore = set(config.get(CONF_IGNORE) or [])
-    required = set(config.get(CONF_REQUIRED) or [])
-    include = set(config.get(CONF_INCLUDE) or [])
 
-    async_add_entities(
-        [
-            HealthcheckSensor(
-                hass, id, name, interval, grace_period, ignore, required, include
-            )
-        ]
-    )
+    healthcheck = config.get(CONF_HEALTHCHECK)
+
+    if healthcheck:
+        id = cast(str, healthcheck.get(CONF_HEALTHCHECK_ID))
+        interval = cast(timedelta, healthcheck.get(CONF_HEALTHCHECK_INTERVAL))
+        grace_period = cast(timedelta, healthcheck.get(CONF_HEALTHCHECK_GRACE_PERIOD))
+        ignore = set(healthcheck.get(CONF_HEALTCHECK_IGNORE) or [])
+        required = set(healthcheck.get(CONF_HEALTHCHECK_REQUIRED) or [])
+        include = set(healthcheck.get(CONF_HEALTHCHECK_INCLUDE) or [])
+
+        async_add_entities(
+            [
+                HealthcheckSensor(
+                    hass, id, name, interval, grace_period, ignore, required, include
+                )
+            ]
+        )
+    else:
+        _LOGGER.error(f"You did not supply '{CONF_HEALTHCHECK}'")
 
 
 class HealthcheckSensor(SensorEntity):
@@ -115,7 +131,7 @@ class HealthcheckSensor(SensorEntity):
     async def async_added_to_hass(self) -> None:
         async_track_time_interval(self._hass, self.check, self._interval)
 
-    @cached_property
+    @property
     def extra_state_attributes(self) -> Mapping[str, Any] | None:
         return self._extra_attributes
 
