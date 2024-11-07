@@ -27,16 +27,20 @@ class Mocks(BaseModel):
 
 @fixture
 async def test_data(hass: HomeAssistant) -> AsyncGenerator[Mocks, None]:
-    with patch(
-        "custom_components.gbb.sensor.HealthcheckSensor.ping",
-        new_callable=AsyncMock,
-    ) as mock_ping, patch(
-        "homeassistant.core.ServiceRegistry.async_call",
-        new_callable=AsyncMock,
-    ) as mock_notify, patch(
-        "custom_components.gbb.sensor.HealthcheckSensor.async_write_ha_state",
-        new_callable=MagicMock,
-    ) as mock_write_state:
+    with (
+        patch(
+            "custom_components.gbb.sensor.HealthcheckSensor.ping",
+            new_callable=AsyncMock,
+        ) as mock_ping,
+        patch(
+            "homeassistant.core.ServiceRegistry.async_call",
+            new_callable=AsyncMock,
+        ) as mock_notify,
+        patch(
+            "custom_components.gbb.sensor.HealthcheckSensor.async_write_ha_state",
+            new_callable=MagicMock,
+        ) as mock_write_state,
+    ):
         mock_ping.return_value = AsyncMock()
         mock_notify.return_value = AsyncMock()
         mock_write_state.return_value = AsyncMock()
@@ -71,7 +75,9 @@ async def test_setup_good(hass: HomeAssistant) -> None:
         hass,
         {
             "platform": "sensor",
-            "id": "020166bc-5eb3-4a30-9f5a-356d15a3ee09",
+            "healthcheck": {
+                "id": "020166bc-5eb3-4a30-9f5a-356d15a3ee09",
+            },
         },
         callback,
         None,
