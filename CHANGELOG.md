@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.5.0](https://github.com/gbbirkisson/gbb-ha/compare/v0.4.1...v0.5.0) (2024-11-07)
+
+
+### Features
+
+* add nordpool binary sensor ([#64](https://github.com/gbbirkisson/gbb-ha/issues/64)) ([a1d5408](https://github.com/gbbirkisson/gbb-ha/commit/a1d54088b8ec8cec49e15e206b1e98aebbab3af3))
+
+
+### Bug Fixes
+
+* **deps:** update dependency mypy to v1.13.0 ([#66](https://github.com/gbbirkisson/gbb-ha/issues/66)) ([ee9a35a](https://github.com/gbbirkisson/gbb-ha/commit/ee9a35a8d6400c4f00a1696341aec3e02776713b))
+* **deps:** update dependency ruff to v0.7.2 ([#67](https://github.com/gbbirkisson/gbb-ha/issues/67)) ([41be758](https://github.com/gbbirkisson/gbb-ha/commit/41be758b90602a3ba80ed0a3510d29e608104a30))
+* **deps:** update HA version ([#62](https://github.com/gbbirkisson/gbb-ha/issues/62)) ([8abf998](https://github.com/gbbirkisson/gbb-ha/commit/8abf9985623b4bc41d59eb453e3b4a7cb8a5329e))
+* **deps:** update homeassistant/home-assistant docker tag to v2024.10.1 ([#59](https://github.com/gbbirkisson/gbb-ha/issues/59)) ([9b6ed52](https://github.com/gbbirkisson/gbb-ha/commit/9b6ed52a56410739b6b4df1484926f5c36e9c44e))
+* **deps:** update homeassistant/home-assistant docker tag to v2024.10.2 ([#60](https://github.com/gbbirkisson/gbb-ha/issues/60)) ([febf979](https://github.com/gbbirkisson/gbb-ha/commit/febf979fbae96c6bfe828e88812c6116d2ac3ac9))
+* **deps:** update homeassistant/home-assistant docker tag to v2024.10.3 ([#61](https://github.com/gbbirkisson/gbb-ha/issues/61)) ([47958c9](https://github.com/gbbirkisson/gbb-ha/commit/47958c9b7a15aabe109faca1441a23e5e4876f40))
+* **deps:** update homeassistant/home-assistant docker tag to v2024.10.4 ([#63](https://github.com/gbbirkisson/gbb-ha/issues/63)) ([0f9d61c](https://github.com/gbbirkisson/gbb-ha/commit/0f9d61cf7bbcf515ba3f64a1d88680fa9843f4bd))
+* **deps:** update homeassistant/home-assistant docker tag to v2024.11.0 ([#65](https://github.com/gbbirkisson/gbb-ha/issues/65)) ([e26fdfd](https://github.com/gbbirkisson/gbb-ha/commit/e26fdfde368a5b49fa2c8b714ffaf415089d3051))
+* remove redundant tox tests ([#68](https://github.com/gbbirkisson/gbb-ha/issues/68)) ([83ae6c9](https://github.com/gbbirkisson/gbb-ha/commit/83ae6c9d121d74b44edefb157bd3d9b73b53c157))
+* use uv instead of poetry ([#56](https://github.com/gbbirkisson/gbb-ha/issues/56)) ([3171088](https://github.com/gbbirkisson/gbb-ha/commit/3171088ab55823dc43f1a03e58d7827b8e7dde08))
+
 ## [0.4.1](https://github.com/gbbirkisson/gbb-ha/compare/v0.4.0...v0.4.1) (2024-10-03)
 
 
