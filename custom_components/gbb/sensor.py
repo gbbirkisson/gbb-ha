@@ -176,14 +176,14 @@ class HealthcheckSensor(SensorEntity):
         _LOGGER.debug(f"Failing entities: {failing}")
         self._extra_attributes.update({"failing": [s.entity_id for s in failing]})
         failing = [
-            f"{s.attributes.get('friendly_name', 'Entity')} ({s.entity_id}): {str(now() - s.last_updated)[:-7]}"
+            f"{s.attributes.get('friendly_name', 'Entity')} ({s.entity_id}): {str(now() - s.last_updated)[:-7]}"  # type: ignore[misc]
             for s in failing
         ]
 
         total = missing + failing
 
         self._state = len(total)
-        message = "\n".join(total)
+        message = "\n".join(total)  # type: ignore[arg-type]
         if self._state == 0:
             message = (
                 f"checked: {len(all)}\nfiltered: {all_count_before_filter - len(all)}"
