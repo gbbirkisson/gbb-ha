@@ -19,7 +19,6 @@ jobs:
         target:
           - lint-mypy
           - lint-ruff
-          - lint-imports
           - test
 
     steps:
@@ -40,3 +39,15 @@ jobs:
         if: matrix.target == 'test'
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  lint-imports:
+    name: Run lint-imports
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run ${{ matrix.target }}
+        run: make lint-imports
+
