@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.5.4](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.3...v0.5.4) (2025-01-02)
+
+
+### Bug Fixes
+
+* **deps:** update astral-sh/setup-uv action to v5 ([#103](https://github.com/gbbirkisson/gbb-ha/issues/103)) ([2305872](https://github.com/gbbirkisson/gbb-ha/commit/2305872d05c2eba5b0d9edc16d516984a7fd25de))
+* **deps:** update dependency mypy to v1.14.0 ([#105](https://github.com/gbbirkisson/gbb-ha/issues/105)) ([ad7b531](https://github.com/gbbirkisson/gbb-ha/commit/ad7b53179abb1784fdb4c65def1c11092cf2dbfa))
+* **deps:** update dependency mypy to v1.14.1 ([#108](https://github.com/gbbirkisson/gbb-ha/issues/108)) ([b6044e8](https://github.com/gbbirkisson/gbb-ha/commit/b6044e87d84653c30ec21867260c7e4c47b1369c))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.194 ([#100](https://github.com/gbbirkisson/gbb-ha/issues/100)) ([bbf80f6](https://github.com/gbbirkisson/gbb-ha/commit/bbf80f6f596488e218832bf0b42dbac94c4a3edd))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.195 ([#106](https://github.com/gbbirkisson/gbb-ha/issues/106)) ([3cdb114](https://github.com/gbbirkisson/gbb-ha/commit/3cdb114f5357e9aa408a1f2b9c16fb88a7fd356d))
+* **deps:** update dependency ruff to v0.8.4 ([#102](https://github.com/gbbirkisson/gbb-ha/issues/102)) ([4556028](https://github.com/gbbirkisson/gbb-ha/commit/45560286d916d95b6105be2d84d878099e0ad788))
+* **deps:** update dependency ruff to v0.8.5 ([#109](https://github.com/gbbirkisson/gbb-ha/issues/109)) ([620f047](https://github.com/gbbirkisson/gbb-ha/commit/620f0471df3321fc3685971497645dbbca98e5bf))
+* **deps:** update homeassistant/home-assistant docker tag to v2024.12.4 ([#99](https://github.com/gbbirkisson/gbb-ha/issues/99)) ([5b774de](https://github.com/gbbirkisson/gbb-ha/commit/5b774de18142847cd58e107a6340a291a51ea264))
+* **deps:** update homeassistant/home-assistant docker tag to v2024.12.5 ([#104](https://github.com/gbbirkisson/gbb-ha/issues/104)) ([bb266e1](https://github.com/gbbirkisson/gbb-ha/commit/bb266e1204cef6a2ba78f2153bf60bffb7024fda))
+
 ## [0.5.3](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.2...v0.5.3) (2024-12-16)
 
 
