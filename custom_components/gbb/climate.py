@@ -9,7 +9,7 @@ import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 from homeassistant.components.climate import PLATFORM_SCHEMA
 from homeassistant.components.climate.const import HVACMode
-from homeassistant.components.generic_thermostat.climate import (
+from homeassistant.components.generic_thermostat.climate import (  # type: ignore
     CONF_INITIAL_HVAC_MODE,
     CONF_KEEP_ALIVE,
     CONF_MAX_TEMP,
