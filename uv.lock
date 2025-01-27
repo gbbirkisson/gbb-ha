@@ -544,7 +544,7 @@ dev = [
 dev = [
     { name = "mypy", specifier = "==1.14.1" },
     { name = "pytest-cov", specifier = ">=6.0.0" },
-    { name = "pytest-homeassistant-custom-component", specifier = "==0.13.204" },
+    { name = "pytest-homeassistant-custom-component", specifier = "==0.13.205" },
     { name = "ruff", specifier = "==0.9.3" },
 ]
 
@@ -722,7 +722,7 @@ wheels = [
 
 [[package]]
 name = "homeassistant"
-version = "2025.1.3"
+version = "2025.1.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiodns" },
@@ -770,9 +770,9 @@ dependencies = [
     { name = "webrtc-models" },
     { name = "yarl" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/16/17/b646156e0b0c0040e9df092886969948d7e57a6bdf7a2df113a384e40262/homeassistant-2025.1.3.tar.gz", hash = "sha256:3d37dd11087c07dd6ea57d793db7306a5869a04a2810ac6163199a6f25811ab9", size = 23356612 }
+sdist = { url = "https://files.pythonhosted.org/packages/f6/9a/224f07021fc8e2fac21adfb71e33aed5fe25cef30eba5a49e3c7057b2a03/homeassistant-2025.1.4.tar.gz", hash = "sha256:cb35f85a0a38ebc3a7fd6b8adf65dd9743b77a7fd615177292f7ef1cd114d52d", size = 23344669 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/aa/9b/271bb2e5fbdef87fc7eb606a703dd36f8783fde35dba96d7ca08339ededa/homeassistant-2025.1.3-py3-none-any.whl", hash = "sha256:3cdc49c846e2e849d8b604857589ee7fc3fb39425ddebd074b594be4921036ce", size = 40033979 },
+    { url = "https://files.pythonhosted.org/packages/2a/e1/2a973ff9c8511c9dc04fe07384500396c55a18cb8c1b1859e274df7fe4df/homeassistant-2025.1.4-py3-none-any.whl", hash = "sha256:06f273ce6e3d1973d65d67de583f1cba7fcb445a85ce9c16f3618d8cf5048b6c", size = 40023710 },
 ]
 
 [[package]]
@@ -1411,7 +1411,7 @@ wheels = [
 
 [[package]]
 name = "pytest-homeassistant-custom-component"
-version = "0.13.204"
+version = "0.13.205"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "coverage" },
@@ -1442,9 +1442,9 @@ dependencies = [
     { name = "syrupy" },
     { name = "tqdm" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/57/40/f5af4f89cd7369c886f061c353bbbd5da215fe739a1717a7c323b2e409cf/pytest_homeassistant_custom_component-0.13.204.tar.gz", hash = "sha256:e80bcebbb4472c7ea5ad40e27181e2aff7111e0e22e1715e5a529ea61381e260", size = 55141 }
+sdist = { url = "https://files.pythonhosted.org/packages/4d/f4/01ad5cd7b67bd055e05c4af03ae1e59f6086496b8fd39a605df275d595b0/pytest_homeassistant_custom_component-0.13.205.tar.gz", hash = "sha256:73ce1720e1a9342e2fbea391469e98741ccc86abf8720ec4dcb5d4d8a1752ffb", size = 55151 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/65/ed/7a682bb0ea774b54fb74b54b3a35af635c1feb959254cab6ac7f28bcece5/pytest_homeassistant_custom_component-0.13.204-py3-none-any.whl", hash = "sha256:47e341e6fbe3620718b8cd3a026f2bececc12730cea88b9bcf289884c5776cc3", size = 60215 },
+    { url = "https://files.pythonhosted.org/packages/2c/24/17e7b240a4933725219b92b5144b029116a27130cc73a029e09863b43cb4/pytest_homeassistant_custom_component-0.13.205-py3-none-any.whl", hash = "sha256:a883f72217c4fba5a7a801e3f802cfe8fc7d4732a29e9c56886ecaf215c817aa", size = 60214 },
 ]
 
 [[package]]
