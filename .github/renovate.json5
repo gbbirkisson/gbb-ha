@@ -7,6 +7,9 @@
     {
       "packagePatterns": ["^homeassistant[-_]?"],
       "groupName": "homeassistant packages"
-    }
+    },
+    {
+      "minimumReleaseAge": "3 days",
+    },
   ],
 }
