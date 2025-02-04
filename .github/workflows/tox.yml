@@ -17,12 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - 2024.8.3
-          - 2024.9.2
-          - 2024.10.4
-          - 2024.11.3
-          - 2024.12.3
-          - 2025.1.1
+          - 2025.1.4
 
     steps:
       - name: Checkout
