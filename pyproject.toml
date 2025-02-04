@@ -11,7 +11,7 @@ requires-python = ">=3.12,<3.13"
 prerelease = "allow"
 dev-dependencies = [
   "pytest-cov>=6.0.0",
-  "pytest-homeassistant-custom-component==0.13.205",
+  "pytest-homeassistant-custom-component==0.13.206",
   "ruff==0.9.4",
   "mypy==1.14.1",
 ]
