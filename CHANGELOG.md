@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.5.6](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.5...v0.5.6) (2025-02-04)
+
+
+### Bug Fixes
+
+* **config:** migrate config .github/renovate.json5 ([#131](https://github.com/gbbirkisson/gbb-ha/issues/131)) ([2002f98](https://github.com/gbbirkisson/gbb-ha/commit/2002f98a83e9a66deec5ca24af6d7d0ef5ad74be))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.205 ([#124](https://github.com/gbbirkisson/gbb-ha/issues/124)) ([b57b46f](https://github.com/gbbirkisson/gbb-ha/commit/b57b46f7c27b75de10f31b7feb8a891ce7e52fda))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.206 ([#127](https://github.com/gbbirkisson/gbb-ha/issues/127)) ([c453a45](https://github.com/gbbirkisson/gbb-ha/commit/c453a4519ca941a696cb5ea6b824c2b4b581134e))
+* **deps:** update dependency ruff to v0.9.3 ([#122](https://github.com/gbbirkisson/gbb-ha/issues/122)) ([4ddff6f](https://github.com/gbbirkisson/gbb-ha/commit/4ddff6fcd524d76df72cdffb8ff288760a481860))
+* **deps:** update dependency ruff to v0.9.4 ([#126](https://github.com/gbbirkisson/gbb-ha/issues/126)) ([6a7c277](https://github.com/gbbirkisson/gbb-ha/commit/6a7c277a2556ceabe1b6ea25c87a431fa5fa377b))
+* **deps:** update homeassistant/home-assistant docker tag to v2025.1.4 ([#123](https://github.com/gbbirkisson/gbb-ha/issues/123)) ([1f96eef](https://github.com/gbbirkisson/gbb-ha/commit/1f96eefa0b374bd8e9ae80bd62cb904ee9393f91))
+* make renovate wait 3 days with PRs ([#128](https://github.com/gbbirkisson/gbb-ha/issues/128)) ([ef8b5e1](https://github.com/gbbirkisson/gbb-ha/commit/ef8b5e1259bd7312ae0ff31fe97ff94a3042bb8c))
+* renovate config ([#130](https://github.com/gbbirkisson/gbb-ha/issues/130)) ([7e4578d](https://github.com/gbbirkisson/gbb-ha/commit/7e4578dce047110fd3d0a9a0ac269b799c2f8498))
+
 ## [0.5.5](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.4...v0.5.5) (2025-01-21)
 
 
