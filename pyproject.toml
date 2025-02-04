@@ -94,7 +94,7 @@ ignore = [
 ]
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.13"
 files = ["custom_components", "tests"]
 follow_imports = "silent"
 warn_incomplete_stub = true
