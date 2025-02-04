@@ -5,12 +5,16 @@
   semanticCommitType: 'fix',
   packageRules: [
     {
-      packagePatterns: ['^homeassistant[-_]?'],
       groupName: 'homeassistant packages',
+      matchPackageNames: [
+        '/^homeassistant[-_]?/',
+      ],
     },
     {
-      packagePatterns: ['^pytest-homeassistant[-_]?'],
       minimumReleaseAge: '3 days',
+      matchPackageNames: [
+        '/^pytest-homeassistant[-_]?/',
+      ],
     },
   ],
 }
