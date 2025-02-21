@@ -16,5 +16,10 @@
         '/^pytest-homeassistant[-_]?/',
       ],
     },
+    {
+      matchUpdateTypes: ['minor', 'patch'],
+      matchCurrentVersion: '!/^0/',
+      automerge: true,
+    },
   ],
 }
