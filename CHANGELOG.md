@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.5.8](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.7...v0.5.8) (2025-03-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.215 ([#152](https://github.com/gbbirkisson/gbb-ha/issues/152)) ([f2dbac1](https://github.com/gbbirkisson/gbb-ha/commit/f2dbac1114a0fff035700ce32e7f60075df59c15))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.218 ([#154](https://github.com/gbbirkisson/gbb-ha/issues/154)) ([056b7ea](https://github.com/gbbirkisson/gbb-ha/commit/056b7eac37958086d7e8a041d7d8b9a46ef009a1))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.219 ([#156](https://github.com/gbbirkisson/gbb-ha/issues/156)) ([e4aade9](https://github.com/gbbirkisson/gbb-ha/commit/e4aade9dae42a7e859222acd6b7904b2f005e9cb))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.221 ([#159](https://github.com/gbbirkisson/gbb-ha/issues/159)) ([c115209](https://github.com/gbbirkisson/gbb-ha/commit/c115209a7f55b40093d028632d52808477d471b8))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.222 ([#160](https://github.com/gbbirkisson/gbb-ha/issues/160)) ([592ee3e](https://github.com/gbbirkisson/gbb-ha/commit/592ee3eca65005cb05a5c5980213c8b35e794b5b))
+* **deps:** update dependency ruff to v0.9.10 ([#157](https://github.com/gbbirkisson/gbb-ha/issues/157)) ([cff550b](https://github.com/gbbirkisson/gbb-ha/commit/cff550bd035c73764dc9422c3860793ccb890d85))
+* **deps:** update dependency ruff to v0.9.9 ([#153](https://github.com/gbbirkisson/gbb-ha/issues/153)) ([50a5aa7](https://github.com/gbbirkisson/gbb-ha/commit/50a5aa77943aaaf3d16b5930aada51ae21cc94b8))
+* **deps:** update homeassistant/home-assistant docker tag to v2025.2.5 ([#150](https://github.com/gbbirkisson/gbb-ha/issues/150)) ([81549fa](https://github.com/gbbirkisson/gbb-ha/commit/81549fa76461668e2f8ac78604cba9e185326da7))
+* **deps:** update homeassistant/home-assistant docker tag to v2025.3.0 ([#155](https://github.com/gbbirkisson/gbb-ha/issues/155)) ([d13204c](https://github.com/gbbirkisson/gbb-ha/commit/d13204c560511bfa2b974e6b817d5d7f2cd77af7))
+* **deps:** update homeassistant/home-assistant docker tag to v2025.3.1 ([#158](https://github.com/gbbirkisson/gbb-ha/issues/158)) ([95a240f](https://github.com/gbbirkisson/gbb-ha/commit/95a240fd714aa78fc088fc83a4309290ab26d4d7))
+* **deps:** update homeassistant/home-assistant docker tag to v2025.3.2 ([#161](https://github.com/gbbirkisson/gbb-ha/issues/161)) ([edd47e3](https://github.com/gbbirkisson/gbb-ha/commit/edd47e3d2543b202c2ddfe70a6568becf2a73cb6))
+
 ## [0.5.7](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.6...v0.5.7) (2025-02-21)
 
 
