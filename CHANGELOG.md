@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.5.10](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.9...v0.5.10) (2025-04-24)
+
+
+### Bug Fixes
+
+* **deps:** update astral-sh/setup-uv action to v6 ([#184](https://github.com/gbbirkisson/gbb-ha/issues/184)) ([4442729](https://github.com/gbbirkisson/gbb-ha/commit/444272926604aef3a06ac65fc4e86b2d0f7626f4))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.235 ([#182](https://github.com/gbbirkisson/gbb-ha/issues/182)) ([bfd3c59](https://github.com/gbbirkisson/gbb-ha/commit/bfd3c5902694e136cdcf637f63ef9827eb7317d6))
+* **deps:** update dependency ruff to v0.11.7 ([#185](https://github.com/gbbirkisson/gbb-ha/issues/185)) ([3e8afdd](https://github.com/gbbirkisson/gbb-ha/commit/3e8afdd020bbb8e73594d5e1cddbbdf4a853cce3))
+
 ## [0.5.9](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.8...v0.5.9) (2025-04-22)
 
 
