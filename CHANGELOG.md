@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.5.14](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.13...v0.5.14) (2025-06-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency mypy to v1.16.0 ([#208](https://github.com/gbbirkisson/gbb-ha/issues/208)) ([3b1eeba](https://github.com/gbbirkisson/gbb-ha/commit/3b1eebab9988b427fc2d3a6d4d077ca079b590ce))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.245 ([#202](https://github.com/gbbirkisson/gbb-ha/issues/202)) ([3cb2ddc](https://github.com/gbbirkisson/gbb-ha/commit/3cb2ddc23a60b128b4c99836f853ca58ba70e9c4))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.246 ([#206](https://github.com/gbbirkisson/gbb-ha/issues/206)) ([2d2bad0](https://github.com/gbbirkisson/gbb-ha/commit/2d2bad0cc358d663650425c1c9a30c27f9f10c8a))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.247 ([#209](https://github.com/gbbirkisson/gbb-ha/issues/209)) ([7dab179](https://github.com/gbbirkisson/gbb-ha/commit/7dab1794bc8740213602117cbe1f2c1ef5a204a0))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.248 ([#210](https://github.com/gbbirkisson/gbb-ha/issues/210)) ([6ec65bc](https://github.com/gbbirkisson/gbb-ha/commit/6ec65bce5c440cc2275bac0b08dc94b9c2e0227a))
+* **deps:** update dependency ruff to v0.11.11 ([#204](https://github.com/gbbirkisson/gbb-ha/issues/204)) ([180ba3b](https://github.com/gbbirkisson/gbb-ha/commit/180ba3b4232b06e7aa77825b18541917002eb853))
+* **deps:** update dependency ruff to v0.11.12 ([#207](https://github.com/gbbirkisson/gbb-ha/issues/207)) ([c9fd140](https://github.com/gbbirkisson/gbb-ha/commit/c9fd140444b67851b75c396c8fc061d20167479d))
+* **deps:** update homeassistant/home-assistant docker tag to v2025.5.3 ([#205](https://github.com/gbbirkisson/gbb-ha/issues/205)) ([c35757b](https://github.com/gbbirkisson/gbb-ha/commit/c35757bc57a06077e60498fc0c939993f045bcc0))
+* **deps:** update python docker tag to v3.13.4 ([#211](https://github.com/gbbirkisson/gbb-ha/issues/211)) ([877b11d](https://github.com/gbbirkisson/gbb-ha/commit/877b11da835ce236ceac23eed5040195bfcfc363))
+
 ## [0.5.13](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.12...v0.5.13) (2025-05-17)
 
 
