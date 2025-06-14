@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.17](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.16...v0.5.17) (2025-06-14)
+
+
+### Bug Fixes
+
+* **deps:** update homeassistant/home-assistant docker tag to v2025.6.1 ([#219](https://github.com/gbbirkisson/gbb-ha/issues/219)) ([3191ed7](https://github.com/gbbirkisson/gbb-ha/commit/3191ed7625b6d828edbaa36a1424e63a559739d3))
+
 ## [0.5.16](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.15...v0.5.16) (2025-06-13)
 
 
