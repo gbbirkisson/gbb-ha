@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.18](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.17...v0.5.18) (2025-08-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency mypy to v1.17.1 ([#240](https://github.com/gbbirkisson/gbb-ha/issues/240)) ([aeeed7d](https://github.com/gbbirkisson/gbb-ha/commit/aeeed7de15f167707d9ea9176935c5c7012097e2))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.264 ([#242](https://github.com/gbbirkisson/gbb-ha/issues/242)) ([f06aeab](https://github.com/gbbirkisson/gbb-ha/commit/f06aeab2afd6feedc056dfbdaabec13c7dd6a150))
+
 ## [0.5.17](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.16...v0.5.17) (2025-07-30)
 
 
