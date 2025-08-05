@@ -10,10 +10,10 @@ requires-python = ">=3.13.2"
 [tool.uv]
 prerelease = "allow"
 dev-dependencies = [
+  "pyright==1.1.403",
   "pytest-cov>=6.0.0",
-  "pytest-homeassistant-custom-component==0.13.264",
+  "pytest-homeassistant-custom-component==0.13.266",
   "ruff==0.12.7",
-  "mypy==1.17.1",
 ]
 
 [tool.coverage.run]
@@ -30,7 +30,7 @@ show_missing = true
 
 [tool.ruff]
 line-length = 94
-exclude = [".venv", "__pycache__", ".mypy_cache"]
+exclude = [".venv", "__pycache__"]
 
 [lint]
 select = [
@@ -93,20 +93,11 @@ ignore = [
   "F401",    # `x` imported but unused
 ]
 
-[tool.mypy]
-python_version = "3.13"
-files = ["custom_components", "tests"]
-follow_imports = "silent"
-warn_incomplete_stub = true
-warn_redundant_casts = true
-warn_unused_configs = true
-strict = true
-
-[[tool.mypy.overrides]]
-module = "pytest_homeassistant_custom_component.*"
-ignore_missing_imports = true
-
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = "tests"
 norecursedirs = ".git"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"

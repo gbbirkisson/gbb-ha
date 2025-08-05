@@ -31,15 +31,15 @@ tox-env: ${TOX} ## Run tests on specific HA versions
 	${TOX} run -e ${HA_VERSION}
 
 .PHONY: lint
-lint: lint-ruff lint-mypy lint-imports ## Run all linters
+lint: lint-ruff lint-pyright lint-imports ## Run all linters
 
 .PHONY: lint-ruff
 lint-ruff: ${VENV} ## Lint with ruff
 	${BIN}/ruff check $(SRC)
 
-.PHONY: lint-mypy
-lint-mypy: ${VENV} ## Lint with mypy
-	${BIN}/mypy $(SRC)
+.PHONY: lint-pyright
+lint-pyright: ${VENV} ## Lint with pyright
+	${BIN}/pyright $(SRC)
 
 .PHONY: lint-imports
 lint-imports: ## Lint imports
