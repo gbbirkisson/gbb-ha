@@ -124,7 +124,7 @@ class HealthcheckSensor(SensorEntity):
         return self._name
 
     @property  # type: ignore[misc]
-    def state(self) -> int:
+    def state(self) -> int:  # type: ignore[reportIncompatibleVariableOverride]
         return self._state
 
     @override
@@ -132,7 +132,7 @@ class HealthcheckSensor(SensorEntity):
         async_track_time_interval(self._hass, self.check, self._interval)
 
     @property
-    def extra_state_attributes(self) -> Mapping[str, Any] | None:
+    def extra_state_attributes(self) -> Mapping[str, Any] | None:  # type: ignore[reportIncompatibleVariableOverride]
         return self._extra_attributes
 
     async def check(self, _: datetime | None = None) -> None:
@@ -159,9 +159,7 @@ class HealthcheckSensor(SensorEntity):
 
         # mark those that are failing
         failing = [
-            s
-            for s in all
-            if s.state in [STATE_UNAVAILABLE, STATE_UNKNOWN, ENTITY_MATCH_NONE]
+            s for s in all if s.state in [STATE_UNAVAILABLE, STATE_UNKNOWN, ENTITY_MATCH_NONE]
         ]
 
         # filter out those that are within the grace period
@@ -185,9 +183,7 @@ class HealthcheckSensor(SensorEntity):
         self._state = len(total)
         message = "\n".join(total)  # type: ignore[arg-type]
         if self._state == 0:
-            message = (
-                f"checked: {len(all)}\nfiltered: {all_count_before_filter - len(all)}"
-            )
+            message = f"checked: {len(all)}\nfiltered: {all_count_before_filter - len(all)}"
 
         await self.ping(message, len(total))
 

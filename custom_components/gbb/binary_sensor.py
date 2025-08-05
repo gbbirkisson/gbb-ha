@@ -8,10 +8,7 @@ from homeassistant.const import STATE_OFF, STATE_ON, STATE_UNAVAILABLE
 from homeassistant.core import Event, HomeAssistant, State
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.event import (
-    EventStateChangedData,
-    async_track_state_change_event,
-)
+from homeassistant.helpers.event import EventStateChangedData, async_track_state_change_event
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from typing_extensions import override
 
@@ -125,11 +122,11 @@ class NordPoolSensor(BinarySensorEntity):
         return self._name
 
     @property  # type: ignore[misc]
-    def state(self) -> Literal["on", "off"] | None:
+    def state(self) -> Literal["on", "off"] | None:  # type: ignore[reportIncompatibleMethodOverride]
         return self._state  # type: ignore[return-value]
 
     @property
-    def extra_state_attributes(self) -> Mapping[str, Any] | None:
+    def extra_state_attributes(self) -> Mapping[str, Any] | None:  # type: ignore[reportIncompatibleMethodOverride]
         return self._extra_attributes
 
     @override

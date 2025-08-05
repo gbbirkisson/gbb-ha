@@ -48,7 +48,7 @@ Makefile targets:
   tox-env       Run tests on specific HA versions
   lint          Run all linters
   lint-ruff     Lint with ruff
-  lint-mypy     Lint with mypy
+  lint-pyright  Lint with pyright
   d-up          Docker compose reboot and tail logs
   d-stop        Docker compose stop
   clean         Clean up caches and venv

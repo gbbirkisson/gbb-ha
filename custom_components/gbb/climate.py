@@ -12,8 +12,8 @@ from homeassistant.components.climate.const import HVACMode
 from homeassistant.components.generic_thermostat.climate import (  # type: ignore
     CONF_INITIAL_HVAC_MODE,
     CONF_KEEP_ALIVE,
-    CONF_MAX_TEMP,
-    CONF_MIN_TEMP,
+    CONF_MAX_TEMP,  # type: ignore[reportPrivateImportUsage]
+    CONF_MIN_TEMP,  # type: ignore[reportPrivateImportUsage]
     CONF_PRECISION,
     CONF_TARGET_TEMP,
     CONF_TEMP_STEP,
@@ -116,9 +116,7 @@ async def async_setup_platform(
     cold_tolerance = cast(float, config.get(CONF_COLD_TOLERANCE))
     hot_tolerance = cast(float, config.get(CONF_HOT_TOLERANCE))
     initial_hvac_mode = cast(HVACMode, config.get(CONF_INITIAL_HVAC_MODE))
-    presets = {
-        key: config[value] for key, value in CONF_PRESETS.items() if value in config
-    }
+    presets = {key: config[value] for key, value in CONF_PRESETS.items() if value in config}
     precision = cast(float, config.get(CONF_PRECISION))
     target_temperature_step = cast(float, config.get(CONF_TEMP_STEP))
     unit = hass.config.units.temperature_unit
@@ -193,23 +191,23 @@ class Thermostat(GenericThermostat):
     ):
         super().__init__(
             hass,
-            name,
-            heater_entity_id,
-            sensor_entity_id,
-            min_temp,
-            max_temp,
-            target_temp,
-            ac_mode,
-            min_cycle_duration,
-            cold_tolerance,
-            hot_tolerance,
-            keep_alive,
-            initial_hvac_mode,
-            presets,
-            precision,
-            target_temperature_step,
-            unit,
-            unique_id,
+            name=name,
+            heater_entity_id=heater_entity_id,
+            sensor_entity_id=sensor_entity_id,
+            min_temp=min_temp,
+            max_temp=max_temp,
+            target_temp=target_temp,
+            ac_mode=ac_mode,
+            min_cycle_duration=min_cycle_duration,
+            cold_tolerance=cold_tolerance,
+            hot_tolerance=hot_tolerance,
+            keep_alive=keep_alive,
+            initial_hvac_mode=initial_hvac_mode,
+            presets=presets,
+            precision=precision,
+            target_temperature_step=target_temperature_step,
+            unit=unit,
+            unique_id=unique_id,
         )
 
         self._fallback_on_duration = None
@@ -272,12 +270,10 @@ class Thermostat(GenericThermostat):
             await super()._async_control_heating(time=time, force=force)
 
     @property
-    def extra_state_attributes(self) -> Mapping[str, Any] | None:
+    def extra_state_attributes(self) -> Mapping[str, Any] | None:  # type: ignore[reportIncompatibleVariableOverride]
         self._static_attributes.update(
             {
-                "fallback_mode": (
-                    STATE_ON if self._is_fallback_mode_active else STATE_OFF
-                ),
+                "fallback_mode": (STATE_ON if self._is_fallback_mode_active else STATE_OFF),
                 "fallback_forced": STATE_ON if self._fallback_forced else STATE_OFF,
             }
         )
@@ -307,9 +303,7 @@ class Thermostat(GenericThermostat):
         else:
             await super()._async_sensor_changed(event)
 
-    async def _async_control_fallback(
-        self, time: datetime.datetime | None = None
-    ) -> None:
+    async def _async_control_fallback(self, time: datetime.datetime | None = None) -> None:
         if self._is_fallback_mode_active:
             async with self._temp_lock:
                 device_active = self._is_device_active
@@ -345,9 +339,7 @@ class Thermostat(GenericThermostat):
                         )
                         await self._async_heater_turn_on()
 
-    async def _async_override_changed(
-        self, event: Event[EventStateChangedData]
-    ) -> None:
+    async def _async_override_changed(self, event: Event[EventStateChangedData]) -> None:
         new_state = event.data["new_state"]
 
         if new_state is not None and new_state.state == STATE_ON:
