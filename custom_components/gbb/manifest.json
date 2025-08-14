@@ -12,5 +12,5 @@
   "iot_class": "cloud_polling",
   "name": "gbb",
   "requirements": [],
-  "version": "0.5.17"
+  "version": "0.6.0"
 }
