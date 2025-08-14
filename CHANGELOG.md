@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.6.0](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.17...v0.6.0) (2025-08-14)
+
+
+### Features
+
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.266 ([#243](https://github.com/gbbirkisson/gbb-ha/issues/243)) ([d613fb0](https://github.com/gbbirkisson/gbb-ha/commit/d613fb0ab2c9727a6303478f57f458d2ec71bef6))
+
+
+### Bug Fixes
+
+* **deps:** update actions/checkout action to v5 ([#249](https://github.com/gbbirkisson/gbb-ha/issues/249)) ([db79d92](https://github.com/gbbirkisson/gbb-ha/commit/db79d92006525de2be44d7fb5c5756ed84c2cf5c))
+* **deps:** update amannn/action-semantic-pull-request action to v6 ([#251](https://github.com/gbbirkisson/gbb-ha/issues/251)) ([893988c](https://github.com/gbbirkisson/gbb-ha/commit/893988cc1f05e6c7d6204ac51a127fed8f6a0364))
+* **deps:** update dependency mypy to v1.17.1 ([#240](https://github.com/gbbirkisson/gbb-ha/issues/240)) ([aeeed7d](https://github.com/gbbirkisson/gbb-ha/commit/aeeed7de15f167707d9ea9176935c5c7012097e2))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.264 ([#242](https://github.com/gbbirkisson/gbb-ha/issues/242)) ([f06aeab](https://github.com/gbbirkisson/gbb-ha/commit/f06aeab2afd6feedc056dfbdaabec13c7dd6a150))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.267 ([#247](https://github.com/gbbirkisson/gbb-ha/issues/247)) ([f0b9250](https://github.com/gbbirkisson/gbb-ha/commit/f0b9250eac97af0c3605d2f3639b2a784a184383))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.269 ([#248](https://github.com/gbbirkisson/gbb-ha/issues/248)) ([72c9b75](https://github.com/gbbirkisson/gbb-ha/commit/72c9b7509e5cf52d37c7c07f622ae23dbd8ebff3))
+* **deps:** update dependency ruff to v0.12.8 ([#245](https://github.com/gbbirkisson/gbb-ha/issues/245)) ([9efaf4b](https://github.com/gbbirkisson/gbb-ha/commit/9efaf4b2a869d1349adc2f9ec855dcfa213b9bd5))
+* **deps:** update homeassistant/home-assistant docker tag to v2025.8.0 ([#244](https://github.com/gbbirkisson/gbb-ha/issues/244)) ([a339d29](https://github.com/gbbirkisson/gbb-ha/commit/a339d29cdfc3ecba6e736362890dce538d6fca52))
+* **deps:** update homeassistant/home-assistant docker tag to v2025.8.1 ([#250](https://github.com/gbbirkisson/gbb-ha/issues/250)) ([cd78c6c](https://github.com/gbbirkisson/gbb-ha/commit/cd78c6c475dfd1d681654d51974aaa5972d73210))
+* **deps:** update python docker tag to v3.13.6 ([#246](https://github.com/gbbirkisson/gbb-ha/issues/246)) ([e7015cd](https://github.com/gbbirkisson/gbb-ha/commit/e7015cd269ef521b5fb15554a940a43af115f0bf))
+
 ## [0.5.17](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.16...v0.5.17) (2025-07-30)
 
 
