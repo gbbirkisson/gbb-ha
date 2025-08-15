@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.1](https://github.com/gbbirkisson/gbb-ha/compare/v0.6.0...v0.6.1) (2025-08-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ruff to v0.12.9 ([#252](https://github.com/gbbirkisson/gbb-ha/issues/252)) ([0480247](https://github.com/gbbirkisson/gbb-ha/commit/0480247db02684bc6b1fca17254e2f42db4d299e))
+* **deps:** update homeassistant/home-assistant docker tag to v2025.8.2 ([#255](https://github.com/gbbirkisson/gbb-ha/issues/255)) ([479b198](https://github.com/gbbirkisson/gbb-ha/commit/479b1982e83de89f12ba0abdfcc5608902bc48c8))
+
 ## [0.6.0](https://github.com/gbbirkisson/gbb-ha/compare/v0.5.17...v0.6.0) (2025-08-14)
 
 
