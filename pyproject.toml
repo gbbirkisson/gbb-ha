@@ -13,7 +13,7 @@ dev-dependencies = [
   "pyright==1.1.404",
   "pytest-cov>=6.0.0",
   "pytest-homeassistant-custom-component==0.13.270",
-  "ruff==0.12.9",
+  "ruff==0.12.10",
 ]
 
 [tool.coverage.run]
