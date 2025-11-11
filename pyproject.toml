@@ -12,7 +12,7 @@ prerelease = "allow"
 dev-dependencies = [
   "pyright==1.1.407",
   "pytest-cov>=6.0.0",
-  "pytest-homeassistant-custom-component==0.13.294",
+  "pytest-homeassistant-custom-component==0.13.295",
   "ruff==0.14.4",
 ]
 
