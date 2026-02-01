@@ -11,9 +11,6 @@ from homeassistant.components.climate import PLATFORM_SCHEMA
 from homeassistant.components.climate.const import HVACMode
 from homeassistant.components.generic_thermostat.climate import (  # type: ignore
     CONF_INITIAL_HVAC_MODE,
-    CONF_KEEP_ALIVE,
-    CONF_MAX_TEMP,  # type: ignore[reportPrivateImportUsage]
-    CONF_MIN_TEMP,  # type: ignore[reportPrivateImportUsage]
     CONF_PRECISION,
     CONF_TARGET_TEMP,
     CONF_TEMP_STEP,
@@ -24,7 +21,10 @@ from homeassistant.components.generic_thermostat.const import (
     CONF_COLD_TOLERANCE,
     CONF_HEATER,
     CONF_HOT_TOLERANCE,
+    CONF_KEEP_ALIVE,
+    CONF_MAX_TEMP,
     CONF_MIN_DUR,
+    CONF_MIN_TEMP,
     CONF_PRESETS,
     CONF_SENSOR,
     DEFAULT_TOLERANCE,
