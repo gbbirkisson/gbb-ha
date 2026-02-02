@@ -11,9 +11,6 @@ from homeassistant.components.climate import PLATFORM_SCHEMA
 from homeassistant.components.climate.const import HVACMode
 from homeassistant.components.generic_thermostat.climate import (  # type: ignore
     CONF_INITIAL_HVAC_MODE,
-    CONF_KEEP_ALIVE,
-    CONF_MAX_TEMP,  # type: ignore[reportPrivateImportUsage]
-    CONF_MIN_TEMP,  # type: ignore[reportPrivateImportUsage]
     CONF_PRECISION,
     CONF_TARGET_TEMP,
     CONF_TEMP_STEP,
@@ -24,7 +21,9 @@ from homeassistant.components.generic_thermostat.const import (
     CONF_COLD_TOLERANCE,
     CONF_HEATER,
     CONF_HOT_TOLERANCE,
+    CONF_MAX_TEMP,
     CONF_MIN_DUR,
+    CONF_MIN_TEMP,
     CONF_PRESETS,
     CONF_SENSOR,
     DEFAULT_TOLERANCE,
@@ -56,6 +55,7 @@ from typing_extensions import override
 _LOGGER = logging.getLogger(__name__)
 
 DEFAULT_NAME = "GBB Thermostat"
+CONF_KEEP_ALIVE = "keep_alive"
 CONF_FALLBACK_ON_RATIO = "fallback_on_ratio"
 CONF_FALLBACK_INTERVAL = "fallback_interval"
 CONF_FALLBACK_FORCE_SWITCH = "fallback_force_switch"

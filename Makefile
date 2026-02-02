@@ -8,7 +8,7 @@ ci: lint test ## Run all CI steps
 
 ${VENV}: pyproject.toml uv.lock
 	uv python install
-	uv venv .venv
+	uv venv --clear .venv
 	uv sync --prerelease=allow
 
 .PHONY: test
