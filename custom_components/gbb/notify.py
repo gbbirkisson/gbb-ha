@@ -55,7 +55,7 @@ def get_service(
     _LOGGER.debug(f"Setup notify: {config}")
 
     try:
-        config = PLATFORM_SCHEMA(config)
+        config = cast(ConfigType, PLATFORM_SCHEMA(config))
     except vol.Error as e:
         _LOGGER.error(f"Setup failed: {e}")
         return None
