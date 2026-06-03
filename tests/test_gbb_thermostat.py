@@ -150,7 +150,7 @@ async def test_gbb_thermostat_no_fallback(
     ) as mock_control_heating:
         assert not test_data.thermostat._is_fallback_mode_active
         await test_data.thermostat._async_control_heating(time=None, force=False)
-        mock_control_heating.assert_called_with(time=None, force=False)
+        mock_control_heating.assert_called_with(None, force=False)
 
 
 async def test_gbb_thermostat_fallback_switch(
@@ -229,7 +229,7 @@ async def test_gbb_thermostat_control_fallback(
         "homeassistant.components.generic_thermostat.climate.GenericThermostat._is_device_active",
         new_callable=PropertyMock,
     ) as mock_device_active, patch(
-        "homeassistant.components.generic_thermostat.climate.condition.state",
+        "custom_components.gbb.climate.condition.state",
         new_callable=MagicMock,
     ) as mock_long_enough, patch(
         "homeassistant.components.generic_thermostat.climate.GenericThermostat._async_heater_turn_off",
