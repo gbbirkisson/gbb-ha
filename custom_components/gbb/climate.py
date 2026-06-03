@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import datetime
+import inspect
 import logging
 from collections.abc import Mapping
 from typing import Any, cast
@@ -189,6 +190,14 @@ class Thermostat(GenericThermostat):
         fallback_interval: datetime.timedelta,
         fallback_force_switch_entity_id: str,
     ):
+        # `max_cycle_duration` and `cycle_cooldown` are required keyword-only
+        # arguments in newer HA versions, but do not exist in older ones.
+        # Pass them only when supported, disabled to keep previous behavior.
+        compat_kwargs: dict[str, Any] = {}
+        if "max_cycle_duration" in inspect.signature(GenericThermostat.__init__).parameters:
+            compat_kwargs["max_cycle_duration"] = None
+            compat_kwargs["cycle_cooldown"] = None
+
         super().__init__(
             hass,
             name=name,
@@ -208,6 +217,7 @@ class Thermostat(GenericThermostat):
             target_temperature_step=target_temperature_step,
             unit=unit,
             unique_id=unique_id,
+            **compat_kwargs,
         )
 
         self._fallback_on_duration = None
@@ -267,7 +277,9 @@ class Thermostat(GenericThermostat):
         self, time: datetime.datetime | None = None, force: bool = False
     ) -> None:
         if not self._is_fallback_mode_active:
-            await super()._async_control_heating(time=time, force=force)
+            # Pass `time` positionally, the parameter was renamed to `_time`
+            # in newer HA versions.
+            await super()._async_control_heating(time, force=force)
 
     @property
     def extra_state_attributes(self) -> Mapping[str, Any] | None:  # type: ignore[reportIncompatibleVariableOverride]
