@@ -63,7 +63,7 @@ async def async_setup_platform(
     _LOGGER.debug(f"Setup sensor: {config}")
 
     try:
-        config = PLATFORM_SCHEMA(config)
+        config = cast(ConfigType, PLATFORM_SCHEMA(config))
     except vol.Error as e:
         _LOGGER.error(f"Setup failed: {e}")
         return
