@@ -11,7 +11,7 @@ dev = [
   "pyright==1.1.410",
   "pytest-cov>=6.0.0",
   "pytest-homeassistant-custom-component==0.13.334",
-  "ruff==0.15.15",
+  "ruff==0.15.16",
 ]
 
 [tool.coverage.run]
