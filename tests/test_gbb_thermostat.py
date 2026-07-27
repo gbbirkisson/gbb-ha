@@ -1,5 +1,5 @@
+from collections.abc import AsyncGenerator
 from datetime import timedelta
-from typing import AsyncGenerator
 from unittest.mock import AsyncMock, MagicMock, PropertyMock, patch
 
 from homeassistant.components.climate.const import HVACMode
@@ -31,7 +31,7 @@ class Data(BaseModel):
 
 
 @fixture
-async def test_data(hass: HomeAssistant) -> AsyncGenerator[Data, None]:
+async def test_data(hass: HomeAssistant) -> AsyncGenerator[Data]:
     mock_sensor_1 = "sensor.mock_sensor_1"
     mock_switch_1 = "sensor.mock_switch_1"
     mock_switch_2 = "sensor.mock_switch_2"

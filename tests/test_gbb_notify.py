@@ -1,8 +1,10 @@
+from collections.abc import AsyncGenerator
 from datetime import timedelta
-from typing import AsyncGenerator
 from unittest.mock import AsyncMock, patch
+
 from homeassistant.core import HomeAssistant
 from pytest import fixture
+
 from custom_components.gbb.notify import (
     CONF_WRAPS,
     WrappedNotificationService,
@@ -39,7 +41,7 @@ async def test_get_service_bad_rate_limit(hass: HomeAssistant) -> None:
 @fixture
 async def notify(
     hass: HomeAssistant,
-) -> AsyncGenerator[WrappedNotificationService, None]:
+) -> AsyncGenerator[WrappedNotificationService]:
     yield WrappedNotificationService(
         hass, "wrapped", False, timedelta(seconds=0), {}, timedelta(seconds=10)
     )

@@ -1,7 +1,8 @@
 import logging
+from collections.abc import Mapping
 from datetime import datetime, timedelta
 from functools import cached_property
-from typing import Any, Mapping, Set, cast
+from typing import Any, cast, override
 
 import aiohttp
 import voluptuous as vol
@@ -12,7 +13,6 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
-from typing_extensions import override
 
 from . import now, wildcard_filter
 
@@ -99,9 +99,9 @@ class HealthcheckSensor(SensorEntity):
         name: str,
         interval: timedelta,
         grace_period: timedelta,
-        ignore: Set[str],
-        required: Set[str],
-        include: Set[str],
+        ignore: set[str],
+        required: set[str],
+        include: set[str],
     ) -> None:
         self._hass = hass
         self._name = name
@@ -166,7 +166,7 @@ class HealthcheckSensor(SensorEntity):
         failing = [s for s in failing if now() - s.last_updated > self._grace_period]
 
         # find missing
-        missing = list(self._required - set([s.entity_id for s in all if s.entity_id]))
+        missing = list(self._required - {s.entity_id for s in all if s.entity_id})
         _LOGGER.debug(f"Missing entities: {missing}")
         self._extra_attributes.update({"missing": missing})
         missing = [f"Entity ({s}): missing" for s in missing]

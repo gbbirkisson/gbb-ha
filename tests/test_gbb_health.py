@@ -1,6 +1,6 @@
+from collections.abc import AsyncGenerator
 from datetime import timedelta
 from types import SimpleNamespace
-from typing import AsyncGenerator
 from unittest.mock import AsyncMock, MagicMock, patch
 
 from homeassistant.const import (
@@ -26,7 +26,7 @@ class Mocks(BaseModel):
 
 
 @fixture
-async def test_data(hass: HomeAssistant) -> AsyncGenerator[Mocks, None]:
+async def test_data(hass: HomeAssistant) -> AsyncGenerator[Mocks]:
     with (
         patch(
             "custom_components.gbb.sensor.HealthcheckSensor.ping",
@@ -55,7 +55,7 @@ async def test_data(hass: HomeAssistant) -> AsyncGenerator[Mocks, None]:
 @fixture
 async def test_sensors(
     hass: HomeAssistant,
-) -> AsyncGenerator[list[str], None]:
+) -> AsyncGenerator[list[str]]:
     mock_sensor_1 = "sensor.mock_sensor_1"
     mock_sensor_2 = "sensor.mock_sensor_2"
     mock_sensor_3 = "sensor.mock_sensor_3"
@@ -188,7 +188,7 @@ async def test_gbb_health_ignored_down(
         "test",
         timedelta(minutes=1),
         timedelta(seconds=0),
-        set([test_sensors[0]]),
+        {test_sensors[0]},
         set(),
         set(),
     )
@@ -210,7 +210,7 @@ async def test_gbb_health_required_present(
         timedelta(minutes=1),
         timedelta(seconds=0),
         set(),
-        set([test_sensors[0]]),
+        {test_sensors[0]},
         set(),
     )
 
@@ -231,7 +231,7 @@ async def test_gbb_health_required_missing(
         timedelta(minutes=1),
         timedelta(seconds=0),
         set(),
-        set(["sensor.not_present"]),
+        {"sensor.not_present"},
         set(),
     )
 
@@ -256,7 +256,7 @@ async def test_gbb_health_include_ok(
         timedelta(seconds=0),
         set(),
         set(),
-        set([test_sensors[1], test_sensors[2]]),
+        {test_sensors[1], test_sensors[2]},
     )
 
     await t.check(None)

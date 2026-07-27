@@ -1,23 +1,27 @@
 import asyncio
+import logging
 from datetime import datetime, timedelta
-from typing import Any, Dict, cast, override
-from homeassistant.core import HomeAssistant
+from typing import Any, cast, override
+
 import homeassistant.helpers.config_validation as cv
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 import voluptuous as vol
 from homeassistant.components.notify import (
     PLATFORM_SCHEMA,
 )
 from homeassistant.components.notify.const import (
-    DOMAIN as NOTIFY_DOMAIN,
-    ATTR_MESSAGE,
-    ATTR_TITLE,
     ATTR_DATA,
+    ATTR_MESSAGE,
     ATTR_TARGET,
+    ATTR_TITLE,
+)
+from homeassistant.components.notify.const import (
+    DOMAIN as NOTIFY_DOMAIN,
 )
 from homeassistant.components.notify.legacy import BaseNotificationService
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
+
 from . import now
-import logging
 
 DEFAULT_NAME = "GBB Notify"
 CONF_NAME = "name"
@@ -63,11 +67,11 @@ def get_service(
     wraps = cast(str, config.get(CONF_WRAPS))
     forward_target = cast(bool, config.get(CONF_FORWARD_TARGET))
     delay = cast(timedelta, config.get(CONF_DELAY))
-    rate_limit = cast(Dict[str, timedelta], config.get(CONF_RATE_LIMIT))
+    rate_limit = cast(dict[str, timedelta], config.get(CONF_RATE_LIMIT))
     default_rate_limit = cast(timedelta, config.get(CONF_DEFAULT_RATE_LIMIT))
 
     bad_config = default_rate_limit < delay
-    for k, r in rate_limit.items():
+    for r in rate_limit.values():
         if r < delay:
             bad_config = True
     if bad_config:
@@ -95,7 +99,7 @@ class WrappedNotificationService(BaseNotificationService):
         self._delay = delay
         self._rate_limit = rate_limit
         self._rate_limit_default = rate_limit_default
-        self._old: dict[str, datetime] = dict()
+        self._old: dict[str, datetime] = {}
 
     @override
     async def async_send_message(  # type: ignore[override]
@@ -122,13 +126,12 @@ class WrappedNotificationService(BaseNotificationService):
         rate_limit = self._rate_limit.get(target, self._rate_limit_default)
         ts_now = now()
         ts_before = self._old.get(target)
-        if ts_before:
-            if (ts_now - ts_before) < rate_limit:
-                _LOGGER.debug(
-                    f"Skipping '{target}' because of rate limiting: {ts_now -
-                    ts_before} < {rate_limit}"
-                )
-                return
+        if ts_before and (ts_now - ts_before) < rate_limit:
+            _LOGGER.debug(
+                f"Skipping '{target}' because of rate limiting: {ts_now -
+                ts_before} < {rate_limit}"
+            )
+            return
 
         _LOGGER.debug(f"Sending message: {target}")
         self._old[target] = ts_now
