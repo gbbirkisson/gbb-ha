@@ -1,6 +1,7 @@
 import logging
+from collections.abc import Mapping
 from functools import cached_property
-from typing import Any, Literal, Mapping, cast
+from typing import Any, Literal, cast, override
 
 import voluptuous as vol
 from homeassistant.components.binary_sensor import PLATFORM_SCHEMA, BinarySensorEntity
@@ -10,7 +11,6 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import EventStateChangedData, async_track_state_change_event
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
-from typing_extensions import override
 
 _LOGGER = logging.getLogger(__name__)
 

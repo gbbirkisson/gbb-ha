@@ -4,7 +4,7 @@ import datetime
 import inspect
 import logging
 from collections.abc import Mapping
-from typing import Any, cast
+from typing import Any, cast, override
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
@@ -51,7 +51,6 @@ from homeassistant.helpers.event import (
     async_track_time_interval,
 )
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
-from typing_extensions import override
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -129,7 +128,7 @@ async def async_setup_platform(
     )
     fallback_force_switch_entity_id = cast(str, config.get(CONF_FALLBACK_FORCE_SWITCH))
 
-    if not (0 <= fallback_on_ratio and fallback_on_ratio <= 1):
+    if not (0 <= fallback_on_ratio <= 1):
         _LOGGER.error(
             "Value for fallback_on_ratio should be between 0 and 1 but is %s",
             fallback_on_ratio,
