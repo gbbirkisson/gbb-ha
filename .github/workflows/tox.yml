@@ -17,14 +17,14 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - 2025.12.4
+          - 2026.8.3
 
     steps:
       - name: Checkout
         uses: actions/checkout@v7
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v9.0.0
+        uses: astral-sh/setup-uv@v10.0.1
         with:
           enable-cache: true
           cache-dependency-glob: "uv.lock"

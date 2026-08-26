@@ -8,10 +8,10 @@ requires-python = ">=3.14.2"
 
 [dependency-groups]
 dev = [
-  "pyright==1.1.411",
-  "pytest-cov>=6.0.0",
-  "pytest-homeassistant-custom-component==0.13.347",
-  "ruff==0.16.1",
+  "pytest-cov==7.1.0",
+  "pytest-homeassistant-custom-component==0.13.357",
+  "ruff==0.16.4",
+  "ty==0.0.74",
 ]
 
 [tool.uv]
@@ -33,65 +33,39 @@ show_missing = true
 line-length = 94
 exclude = [".venv", "__pycache__"]
 
-[lint]
-select = [
-  "F", # Pyflakes
-  "E", # ?
-  "W", # pycodestyle
-  # "C", # mccabe
-  "I", # isort
-  "N", # pep8-naming
-  # "D",   # pydocstyle
-  "UP",  # pyupgrade
-  "YTT", # flake8-2020
-  # "ANN", # flake8-annotations
-  # "S",   # flake8-bandit
-  "BLE", # flake8-blind-except
-  # "FBT", # flake8-boolean-trap
-  "B", # flake8-bugbear
-  "A", # flake8-builtins
-  # "COM", # flake8-commas
-  "C4",  # flake8-comprehensions
-  "DTZ", # flake8-datetimez
-  "T10", # flake8-debugger
-  "DJ",  # flake8-django
-  # "EM",  # flake8-errmsg
-  "EXE", # flake8-executable
-  "ISC", # flake8-implicit-str-concat
-  "ICN", # flake8-import-conventions
-  "G",   # flake8-logging-format
-  "INP", # flake8-no-pep420
-  "PIE", # flake8-pie
-  "T20", # flake8-print
-  "PYI", # flake8-pyi
-  "PT",  # flake8-pytest-style
-  "Q",   # flake8-quotes
-  "RSE", # flake8-raise
-  "RET", # flake8-return
-  "SLF", # flake8-self
-  # "SIM", # flake8-simplify
-  "TID", # flake8-tidy-imports
-  # "TCH", # flake8-type-checking
-  # "ARG", # flake8-unused-arguments
-  "PTH", # flake8-use-pathlib
-  # "ERA", # eradicate
-  "PD",  # pandas-vet
-  "PGH", # pygrep-hooks
-  "PL",  # Pylint
-  "PLC", # Pylint Convention
-  "PLE", # Pylint Error
-  # "PLR", # Pylint Refactor
-  "PLW", # Pylint Warning
-  # "TRY", # tryceratops
-  "NPY", # NumPy-specific rules
-  # "RUF", # Ruff-specific rules
-]
+[tool.ruff.lint]
+select = ["ALL"]
 ignore = [
-  "PT001",   # Use `@pytest.fixture()` over `@pytest.fixture`
-  "PT004",   # Fixture `x` does not return anything, add leading underscore
-  "PLR0912", # Too many branches
-  "PLR0913", # Too many arguments to function call
-  "F401",    # `x` imported but unused
+  # This project does not document with docstrings
+  "D100", # undocumented-public-module
+  "D101", # undocumented-public-class
+  "D102", # undocumented-public-method
+  "D103", # undocumented-public-function
+  "D104", # undocumented-public-package
+  "D107", # undocumented-public-init
+
+  # One of each of these incompatible pairs has to go
+  "D203", # incorrect-blank-line-before-class, conflicts with D211
+  "D213", # multi-line-summary-second-line, conflicts with D212
+
+  # There is a LICENSE in the repo root, no need for per file headers
+  "CPY001", # missing-copyright-notice
+
+  # Deferring these imports buys nothing, homeassistant is already imported
+  "TC002", # typing-only-third-party-import
+  "TC003", # typing-only-standard-library-import
+
+  # Entities mirror the wide constructor signatures of their homeassistant bases
+  "PLR0913", # too-many-arguments
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+  "ANN401",  # any-type, test helpers forward **kwargs
+  "ARG001",  # unused-function-argument, fixtures requested for side effects
+  "PLR2004", # magic-value-comparison, literal expectations are the point
+  "S101",    # assert, that is how pytest works
+  "SLF001",  # private-member-access, tests exercise entity internals on purpose
 ]
 
 [tool.pytest.ini_options]
@@ -99,6 +73,5 @@ asyncio_mode = "auto"
 testpaths = "tests"
 norecursedirs = ".git"
 
-[tool.pyright]
-venvPath = "."
-venv = ".venv"
+[tool.ty.environment]
+python = ".venv"
