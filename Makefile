@@ -31,29 +31,29 @@ tox-env: ${TOX} ## Run tests on specific HA versions
 	${TOX} run -e ${HA_VERSION}
 
 .PHONY: lint
-lint: lint-ruff lint-pyright lint-imports ## Run all linters
+lint: lint-ruff lint-ty lint-imports ## Run all linters
 
 .PHONY: lint-ruff
 lint-ruff: ${VENV} ## Lint with ruff
 	${BIN}/ruff check $(SRC)
 
-.PHONY: lint-pyright
-lint-pyright: ${VENV} ## Lint with pyright
-	${BIN}/pyright $(SRC)
+.PHONY: lint-ty
+lint-ty: ${VENV} ## Lint with ty
+	${BIN}/ty check $(SRC)
 
 .PHONY: lint-imports
 lint-imports: ## Lint imports
 	bash -c 'grep -r --include="*.py" "custom_components" custom_components >/dev/null && exit 1 || exit 0'
 
-.PHONY: d-up
-d-up: ## Docker compose reboot and tail logs
-	docker compose stop
-	docker compose up -d
-	docker compose logs -f
+.PHONY: h-up
+h-up: ## Podman compose reboot and tail logs
+	podman compose stop
+	podman compose up -d
+	podman compose logs -f
 
-.PHONY: d-stop
-d-stop: ## Docker compose stop
-	docker compose stop
+.PHONY: h-stop
+h-stop: ## Docker compose stop
+	podman compose stop
 
 .PHONY: clean
 clean: ## Clean up caches and venv
@@ -62,6 +62,5 @@ clean: ## Clean up caches and venv
 
 .DEFAULT_GOAL:=help
 help: ## Show this help
-	$(eval HELP_COL_WIDTH:=13)
 	@echo "Makefile targets:"
-	@grep -E '[^\s]+:.*?## .*$$' ${MAKEFILE_LIST} | grep -v grep | envsubst | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-${HELP_COL_WIDTH}s\033[0m %s\n", $$1, $$2}'
+	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z0-9_-]+:.*## /{printf "  \033[36m%-13s\033[0m %s\n", $$1, $$2}' ${MAKEFILE_LIST}

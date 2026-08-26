@@ -9,7 +9,6 @@ logger:
     custom_components.gbb.binary_sensor: warning
     custom_components.gbb.sensor: warning
     custom_components.gbb.climate: warning
-    custom_components.gbb.notify: warning
 
 # gbb_health
 sensor:
@@ -24,25 +23,16 @@ sensor:
         - person.admin
         - conversation.home_assistant
         - tts.*
-  - platform: nordpool
-    region: "NO1"
-    currency: "NOK"
+        - "*.backup_*"
 
 binary_sensor:
   - platform: gbb
     nordpool:
-      sensor: sensor.nordpool_kwh_no1_nok_3_10_025
+      sensor: sensor.nord_pool_no1_current_price
+      # Disabled by default, enable it on the Nord Pool device first
+      average: sensor.nord_pool_no1_daily_average
       switch: input_boolean.nordpool_enable
       knob: input_number.nordpool_knob
-
-# gbb_notify
-notify:
-  - platform: gbb
-    wraps: notify
-    delay: 00:00:04
-    default_rate_limit: 00:00:15
-    rate_limit:
-      asdf: 00:00:25
 
 # gbb_thermostat
 input_number:

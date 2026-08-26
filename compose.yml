@@ -1,7 +1,11 @@
 ---
 services:
   hass:
-    image: homeassistant/home-assistant:2026.7.4
+    image: docker.io/homeassistant/home-assistant:2026.8.3
+    # `default_config` pulls in dhcp discovery, which opens an AF_PACKET raw
+    # socket and fails with EPERM without this
+    cap_add:
+      - NET_RAW
     ports:
       - 8123:8123
     volumes:

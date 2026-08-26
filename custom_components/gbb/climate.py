@@ -1,16 +1,13 @@
-from __future__ import annotations
-
 import datetime
-import inspect
 import logging
 from collections.abc import Mapping
-from typing import Any, cast, override
+from typing import Any, override
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 from homeassistant.components.climate import PLATFORM_SCHEMA
 from homeassistant.components.climate.const import HVACMode
-from homeassistant.components.generic_thermostat.climate import (  # type: ignore
+from homeassistant.components.generic_thermostat.climate import (
     CONF_INITIAL_HVAC_MODE,
     CONF_PRECISION,
     CONF_TARGET_TEMP,
@@ -39,7 +36,6 @@ from homeassistant.const import (
     STATE_ON,
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
-    UnitOfTemperature,
 )
 from homeassistant.core import Event, HomeAssistant
 from homeassistant.exceptions import ConditionError
@@ -60,6 +56,10 @@ CONF_FALLBACK_ON_RATIO = "fallback_on_ratio"
 CONF_FALLBACK_INTERVAL = "fallback_interval"
 CONF_FALLBACK_FORCE_SWITCH = "fallback_force_switch"
 
+# Fallback mode toggles the heater on a duty cycle, so it has to be polled far
+# more often than the cycle itself lasts
+FALLBACK_POLLS_PER_INTERVAL = 100
+
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
         vol.Required(CONF_HEATER): cv.entity_id,
@@ -74,19 +74,23 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Optional(CONF_TARGET_TEMP): vol.Coerce(float),
         vol.Optional(CONF_KEEP_ALIVE): cv.positive_time_period,
         vol.Optional(CONF_INITIAL_HVAC_MODE): vol.In(
-            [HVACMode.COOL, HVACMode.HEAT, HVACMode.OFF]
+            [HVACMode.COOL, HVACMode.HEAT, HVACMode.OFF],
         ),
         vol.Optional(CONF_PRECISION): vol.In(
-            [PRECISION_TENTHS, PRECISION_HALVES, PRECISION_WHOLE]
+            [PRECISION_TENTHS, PRECISION_HALVES, PRECISION_WHOLE],
         ),
         vol.Optional(CONF_TEMP_STEP): vol.In(
-            [PRECISION_TENTHS, PRECISION_HALVES, PRECISION_WHOLE]
+            [PRECISION_TENTHS, PRECISION_HALVES, PRECISION_WHOLE],
         ),
         vol.Optional(CONF_UNIQUE_ID): cv.string,
-        vol.Optional(CONF_FALLBACK_ON_RATIO): vol.Coerce(float),
-        vol.Optional(CONF_FALLBACK_INTERVAL): cv.positive_time_period,
+        vol.Required(CONF_FALLBACK_ON_RATIO): vol.All(
+            vol.Coerce(float), vol.Range(min=0, max=1),
+        ),
+        vol.Optional(
+            CONF_FALLBACK_INTERVAL, default=datetime.timedelta(minutes=60),
+        ): cv.positive_time_period,
         vol.Optional(CONF_FALLBACK_FORCE_SWITCH): cv.entity_id,
-    }
+    },
 ).extend({vol.Optional(v): vol.Coerce(float) for (_, v) in CONF_PRESETS.items()})
 
 
@@ -96,145 +100,68 @@ async def async_setup_platform(
     async_add_entities: AddEntitiesCallback,
     _: DiscoveryInfoType | None = None,
 ) -> None:
-    _LOGGER.debug(f"Setup climate: {config}")
-
-    try:
-        config = cast(ConfigType, PLATFORM_SCHEMA(config))
-    except vol.Error as e:
-        _LOGGER.error(f"Setup failed: {e}")
-        return
-
-    name = cast(str, config.get(CONF_NAME))
-    heater_entity_id = cast(str, config.get(CONF_HEATER))
-    sensor_entity_id = cast(str, config.get(CONF_SENSOR))
-    min_temp = cast(float, config.get(CONF_MIN_TEMP))
-    max_temp = cast(float, config.get(CONF_MAX_TEMP))
-    target_temp = cast(float, config.get(CONF_TARGET_TEMP))
-    keep_alive = cast(datetime.timedelta, config.get(CONF_KEEP_ALIVE))
-    ac_mode = cast(bool, config.get(CONF_AC_MODE))
-    min_cycle_duration = cast(datetime.timedelta, config.get(CONF_MIN_DUR))
-    cold_tolerance = cast(float, config.get(CONF_COLD_TOLERANCE))
-    hot_tolerance = cast(float, config.get(CONF_HOT_TOLERANCE))
-    initial_hvac_mode = cast(HVACMode, config.get(CONF_INITIAL_HVAC_MODE))
-    presets = {key: config[value] for key, value in CONF_PRESETS.items() if value in config}
-    precision = cast(float, config.get(CONF_PRECISION))
-    target_temperature_step = cast(float, config.get(CONF_TEMP_STEP))
-    unit = hass.config.units.temperature_unit
-    unique_id = cast(str, config.get(CONF_UNIQUE_ID))
-    fallback_on_ratio = cast(float, config.get(CONF_FALLBACK_ON_RATIO))
-    fallback_interval = cast(
-        datetime.timedelta,
-        config.get(CONF_FALLBACK_INTERVAL) or datetime.timedelta(minutes=60),
-    )
-    fallback_force_switch_entity_id = cast(str, config.get(CONF_FALLBACK_FORCE_SWITCH))
-
-    if not (0 <= fallback_on_ratio <= 1):
-        _LOGGER.error(
-            "Value for fallback_on_ratio should be between 0 and 1 but is %s",
-            fallback_on_ratio,
-        )
-        return
+    _LOGGER.debug("Setup climate: %s", config)
 
     async_add_entities(
         [
             Thermostat(
-                hass,
-                name,
-                heater_entity_id,
-                sensor_entity_id,
-                min_temp,
-                max_temp,
-                target_temp,
-                ac_mode,
-                min_cycle_duration,
-                cold_tolerance,
-                hot_tolerance,
-                keep_alive,
-                initial_hvac_mode,
-                presets,
-                precision,
-                target_temperature_step,
-                unit,
-                unique_id,
-                fallback_on_ratio,
-                fallback_interval,
-                fallback_force_switch_entity_id,
-            )
-        ]
+                name=config[CONF_NAME],
+                heater_entity_id=config[CONF_HEATER],
+                sensor_entity_id=config[CONF_SENSOR],
+                min_temp=config.get(CONF_MIN_TEMP),
+                max_temp=config.get(CONF_MAX_TEMP),
+                target_temp=config.get(CONF_TARGET_TEMP),
+                ac_mode=config.get(CONF_AC_MODE),
+                min_cycle_duration=config.get(CONF_MIN_DUR),
+                cold_tolerance=config[CONF_COLD_TOLERANCE],
+                hot_tolerance=config[CONF_HOT_TOLERANCE],
+                keep_alive=config.get(CONF_KEEP_ALIVE),
+                initial_hvac_mode=config.get(CONF_INITIAL_HVAC_MODE),
+                presets={
+                    key: config[value]
+                    for key, value in CONF_PRESETS.items()
+                    if value in config
+                },
+                precision=config.get(CONF_PRECISION),
+                target_temperature_step=config.get(CONF_TEMP_STEP),
+                unit=hass.config.units.temperature_unit,
+                unique_id=config.get(CONF_UNIQUE_ID),
+                fallback_on_ratio=config[CONF_FALLBACK_ON_RATIO],
+                fallback_interval=config[CONF_FALLBACK_INTERVAL],
+                fallback_force_switch_entity_id=config.get(CONF_FALLBACK_FORCE_SWITCH),
+            ),
+        ],
     )
 
 
 class Thermostat(GenericThermostat):
+    """A GenericThermostat that keeps heating when its sensor goes away."""
+
     def __init__(
         self,
-        hass: HomeAssistant,
-        name: str,
-        heater_entity_id: str,
-        sensor_entity_id: str,
-        min_temp: float,
-        max_temp: float,
-        target_temp: float,
-        ac_mode: bool,
-        min_cycle_duration: datetime.timedelta,
-        cold_tolerance: float,
-        hot_tolerance: float,
-        keep_alive: datetime.timedelta,
-        initial_hvac_mode: HVACMode | None,
-        presets: dict[str, Any],
-        precision: float,
-        target_temperature_step: float,
-        unit: UnitOfTemperature,
-        unique_id: str,
+        *,
         fallback_on_ratio: float,
         fallback_interval: datetime.timedelta,
-        fallback_force_switch_entity_id: str,
-    ):
-        # `max_cycle_duration` and `cycle_cooldown` are required keyword-only
-        # arguments in newer HA versions, but do not exist in older ones.
-        # Pass them only when supported, disabled to keep previous behavior.
-        compat_kwargs: dict[str, Any] = {}
-        if "max_cycle_duration" in inspect.signature(GenericThermostat.__init__).parameters:
-            compat_kwargs["max_cycle_duration"] = None
-            compat_kwargs["cycle_cooldown"] = None
+        fallback_force_switch_entity_id: str | None,
+        # Everything else belongs to GenericThermostat, restating its 17 arguments
+        # here just to forward them verbatim is worse than passing them through
+        **kwargs: Any,  # noqa: ANN401
+    ) -> None:
+        # `max_cycle_duration` and `cycle_cooldown` are required, we do not use them
+        super().__init__(max_cycle_duration=None, cycle_cooldown=None, **kwargs)
 
-        super().__init__(
-            hass,
-            name=name,
-            heater_entity_id=heater_entity_id,
-            sensor_entity_id=sensor_entity_id,
-            min_temp=min_temp,
-            max_temp=max_temp,
-            target_temp=target_temp,
-            ac_mode=ac_mode,
-            min_cycle_duration=min_cycle_duration,
-            cold_tolerance=cold_tolerance,
-            hot_tolerance=hot_tolerance,
-            keep_alive=keep_alive,
-            initial_hvac_mode=initial_hvac_mode,
-            presets=presets,
-            precision=precision,
-            target_temperature_step=target_temperature_step,
-            unit=unit,
-            unique_id=unique_id,
-            **compat_kwargs,
-        )
-
-        self._fallback_on_duration = None
-        self._fallback_off_duration = None
-        self._fallback_interval = None
-        self._fallback_force_switch_entity_id = None
         self._sensor_available = True
         self._fallback_forced = False
-        self._static_attributes = {}
-
-        self._fallback_on_duration = datetime.timedelta(
-            seconds=(fallback_interval.total_seconds() * fallback_on_ratio)
-        )
-        self._fallback_off_duration = datetime.timedelta(
-            seconds=(fallback_interval.total_seconds() * (1 - fallback_on_ratio))
-        )
-        self._fallback_interval = fallback_interval / 100
+        self._fallback_on_duration = fallback_interval * fallback_on_ratio
+        self._fallback_off_duration = fallback_interval * (1 - fallback_on_ratio)
+        self._fallback_interval = fallback_interval / FALLBACK_POLLS_PER_INTERVAL
         self._fallback_force_switch_entity_id = fallback_force_switch_entity_id
+        self._static_attributes = {
+            "fallback_on_duration": str(self._fallback_on_duration),
+            "fallback_off_duration": str(self._fallback_off_duration),
+            "fallback_interval": str(self._fallback_interval),
+        }
+
         _LOGGER.info(
             (
                 "Fallback mode configured. It will run '%s' ON for %s "
@@ -245,50 +172,47 @@ class Thermostat(GenericThermostat):
             self._fallback_off_duration,
             self.sensor_entity_id,
         )
-        self._static_attributes = {
-            "fallback_on_duration": str(self._fallback_on_duration),
-            "fallback_off_duration": str(self._fallback_off_duration),
-            "fallback_interval": str(self._fallback_interval),
-        }
 
     @override
     async def async_added_to_hass(self) -> None:
         await super().async_added_to_hass()
 
-        if self._fallback_interval:
+        self.async_on_remove(
+            async_track_time_interval(
+                self.hass,
+                self._async_control_fallback,
+                self._fallback_interval,
+                cancel_on_shutdown=True,
+            ),
+        )
+
+        if self._fallback_force_switch_entity_id:
             self.async_on_remove(
-                async_track_time_interval(
-                    self.hass, self._async_control_fallback, self._fallback_interval
-                )
+                async_track_state_change_event(
+                    self.hass,
+                    [self._fallback_force_switch_entity_id],
+                    self._async_override_changed,
+                ),
             )
 
-            if self._fallback_force_switch_entity_id:
-                self.async_on_remove(
-                    async_track_state_change_event(
-                        self.hass,
-                        [self._fallback_force_switch_entity_id],
-                        self._async_override_changed,
-                    )
-                )
+    @property
+    def _is_fallback_mode_active(self) -> bool:
+        return self._fallback_forced or not self._sensor_available
+
+    @property
+    def extra_state_attributes(self) -> Mapping[str, Any] | None:
+        return {
+            **self._static_attributes,
+            "fallback_mode": STATE_ON if self._is_fallback_mode_active else STATE_OFF,
+            "fallback_forced": STATE_ON if self._fallback_forced else STATE_OFF,
+        }
 
     @override
     async def _async_control_heating(
-        self, time: datetime.datetime | None = None, force: bool = False
+        self, _time: datetime.datetime | None = None, force: bool = False,
     ) -> None:
         if not self._is_fallback_mode_active:
-            # Pass `time` positionally, the parameter was renamed to `_time`
-            # in newer HA versions.
-            await super()._async_control_heating(time, force=force)
-
-    @property
-    def extra_state_attributes(self) -> Mapping[str, Any] | None:  # type: ignore[reportIncompatibleVariableOverride]
-        self._static_attributes.update(
-            {
-                "fallback_mode": (STATE_ON if self._is_fallback_mode_active else STATE_OFF),
-                "fallback_forced": STATE_ON if self._fallback_forced else STATE_OFF,
-            }
-        )
-        return self._static_attributes
+            await super()._async_control_heating(_time, force=force)
 
     @override
     async def _async_sensor_changed(self, event: Event[EventStateChangedData]) -> None:
@@ -308,63 +232,49 @@ class Thermostat(GenericThermostat):
                 "Sensor '%s' has become unavailable, entering fallback mode!",
                 self.sensor_entity_id,
             )
+
         if self._is_fallback_mode_active:
             await self._async_control_fallback()
             self.async_write_ha_state()
         else:
             await super()._async_sensor_changed(event)
 
-    async def _async_control_fallback(self, time: datetime.datetime | None = None) -> None:
-        if self._is_fallback_mode_active:
-            async with self._temp_lock:
-                device_active = self._is_device_active
-                if device_active:
-                    current_state = STATE_ON
-                    for_how_long = self._fallback_on_duration
-                else:
-                    current_state = HVACMode.OFF
-                    for_how_long = self._fallback_off_duration
-                try:
-                    long_enough = condition.state(
-                        self.hass,
-                        self.heater_entity_id,
-                        current_state,
-                        for_how_long,
-                    )
-                except ConditionError:
-                    long_enough = False
+    async def _async_control_fallback(self, _time: datetime.datetime | None = None) -> None:
+        if not self._is_fallback_mode_active:
+            return
 
-                if long_enough:
-                    if device_active:
-                        _LOGGER.info(
-                            "Climate '%s' running in fallback mode, turning off '%s'",
-                            self.name,
-                            self.heater_entity_id,
-                        )
-                        await self._async_heater_turn_off()
-                    else:
-                        _LOGGER.info(
-                            "Climate '%s' running in fallback mode, turning on '%s'",
-                            self.name,
-                            self.heater_entity_id,
-                        )
-                        await self._async_heater_turn_on()
+        async with self._temp_lock:
+            device_active = self._is_device_active
+            current_state = STATE_ON if device_active else STATE_OFF
+            for_how_long = (
+                self._fallback_on_duration if device_active else self._fallback_off_duration
+            )
+
+            try:
+                long_enough = condition.state(
+                    self.hass, self.heater_entity_id, current_state, for_how_long,
+                )
+            except ConditionError:
+                long_enough = False
+
+            if not long_enough:
+                return
+
+            _LOGGER.info(
+                "Climate '%s' running in fallback mode, turning %s '%s'",
+                self.name,
+                "off" if device_active else "on",
+                self.heater_entity_id,
+            )
+            if device_active:
+                await self._async_heater_turn_off()
+            else:
+                await self._async_heater_turn_on()
 
     async def _async_override_changed(self, event: Event[EventStateChangedData]) -> None:
         new_state = event.data["new_state"]
-
-        if new_state is not None and new_state.state == STATE_ON:
-            self._fallback_forced = True
-            _LOGGER.debug(
-                "Fallback override enabled!",
-            )
-        else:
-            self._fallback_forced = False
-            _LOGGER.debug(
-                "Fallback override disabled!",
-            )
+        self._fallback_forced = new_state is not None and new_state.state == STATE_ON
+        _LOGGER.debug(
+            "Fallback override %s!", "enabled" if self._fallback_forced else "disabled",
+        )
         self.async_write_ha_state()
-
-    @property
-    def _is_fallback_mode_active(self) -> bool:
-        return self._fallback_forced or not self._sensor_available
