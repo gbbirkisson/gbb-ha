@@ -1,7 +1,7 @@
 ---
 services:
   hass:
-    image: docker.io/homeassistant/home-assistant:2026.9.0
+    image: docker.io/homeassistant/home-assistant:2026.9.1
     # `default_config` pulls in dhcp discovery, which opens an AF_PACKET raw
     # socket and fails with EPERM without this
     cap_add:
