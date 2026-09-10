@@ -83,6 +83,11 @@ def attributes(sensor: NordPoolSensor) -> dict[str, Any]:
     return dict(attrs)
 
 
+# Read through a call so ty does not carry narrowing across state changes
+def is_on(sensor: NordPoolSensor) -> bool | None:
+    return sensor.is_on
+
+
 async def test_disabled_when_switch_off(hass: HomeAssistant) -> None:
     sensor = await setup_sensor(
         hass, price="1.0", average="2.0", switch=STATE_OFF, knob="1.0",
@@ -144,7 +149,7 @@ async def test_state_change_triggers_update(hass: HomeAssistant) -> None:
     sensor = await setup_sensor(
         hass, price="3.0", average="2.0", switch=STATE_ON, knob="1.0",
     )
-    assert not sensor.is_on
+    assert not is_on(sensor)
 
     with patch.object(NordPoolSensor, "async_write_ha_state", MagicMock()):
         sensor._async_state_changed(
@@ -159,14 +164,14 @@ async def test_state_change_triggers_update(hass: HomeAssistant) -> None:
         )
 
     # Threshold doubled, the current price is now below it
-    assert sensor.is_on
+    assert is_on(sensor)
 
 
 async def test_average_change_recomputes_threshold(hass: HomeAssistant) -> None:
     sensor = await setup_sensor(
         hass, price="3.0", average="2.0", switch=STATE_ON, knob="1.0",
     )
-    assert not sensor.is_on
+    assert not is_on(sensor)
 
     with patch.object(NordPoolSensor, "async_write_ha_state", MagicMock()):
         sensor._async_state_changed(
@@ -181,4 +186,4 @@ async def test_average_change_recomputes_threshold(hass: HomeAssistant) -> None:
         )
 
     assert attributes(sensor)["threshold"] == 4.0
-    assert sensor.is_on
+    assert is_on(sensor)
