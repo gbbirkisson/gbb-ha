@@ -200,7 +200,7 @@ class Thermostat(GenericThermostat):
         return self._fallback_forced or not self._sensor_available
 
     @property
-    def extra_state_attributes(self) -> Mapping[str, Any] | None:
+    def extra_state_attributes(self) -> Mapping[str, Any] | None:  # ty: ignore[invalid-property-type-override]
         return {
             **self._static_attributes,
             "fallback_mode": STATE_ON if self._is_fallback_mode_active else STATE_OFF,
