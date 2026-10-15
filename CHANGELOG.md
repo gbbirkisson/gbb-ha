@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.7.2](https://github.com/gbbirkisson/gbb-ha/compare/v0.7.1...v0.7.2) (2026-10-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ruff to v0.17.1 ([#456](https://github.com/gbbirkisson/gbb-ha/issues/456)) ([ad33a11](https://github.com/gbbirkisson/gbb-ha/commit/ad33a11eb73a8779b98738f9f53d37fe38b58d15))
+* **deps:** update dependency ruff to v0.17.1 ([#462](https://github.com/gbbirkisson/gbb-ha/issues/462)) ([7729ce0](https://github.com/gbbirkisson/gbb-ha/commit/7729ce0370b20ec1543da85f2f7fe0c88ee3e2fa))
+* **deps:** update dependency ty to v0.0.87 ([#454](https://github.com/gbbirkisson/gbb-ha/issues/454)) ([157bf6d](https://github.com/gbbirkisson/gbb-ha/commit/157bf6d9fd3ec6a30c1484443bd525aea3ed6916))
+* **deps:** update dependency ty to v0.0.88 ([#461](https://github.com/gbbirkisson/gbb-ha/issues/461)) ([f2ca93e](https://github.com/gbbirkisson/gbb-ha/commit/f2ca93e1dc483d5e159f6225e43a3811d2ad5202))
+
 ## [0.7.1](https://github.com/gbbirkisson/gbb-ha/compare/v0.7.0...v0.7.1) (2026-10-14)
 
 
