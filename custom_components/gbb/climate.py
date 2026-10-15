@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 import logging
 from collections.abc import Mapping
 from typing import Any, override
@@ -87,7 +87,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
             vol.Coerce(float), vol.Range(min=0, max=1),
         ),
         vol.Optional(
-            CONF_FALLBACK_INTERVAL, default=datetime.timedelta(minutes=60),
+            CONF_FALLBACK_INTERVAL, default=dt.timedelta(minutes=60),
         ): cv.positive_time_period,
         vol.Optional(CONF_FALLBACK_FORCE_SWITCH): cv.entity_id,
     },
@@ -141,7 +141,7 @@ class Thermostat(GenericThermostat):
         self,
         *,
         fallback_on_ratio: float,
-        fallback_interval: datetime.timedelta,
+        fallback_interval: dt.timedelta,
         fallback_force_switch_entity_id: str | None,
         # Everything else belongs to GenericThermostat, restating its 17 arguments
         # here just to forward them verbatim is worse than passing them through
@@ -209,7 +209,7 @@ class Thermostat(GenericThermostat):
 
     @override
     async def _async_control_heating(
-        self, _time: datetime.datetime | None = None, force: bool = False,
+        self, _time: dt.datetime | None = None, force: bool = False,
     ) -> None:
         if not self._is_fallback_mode_active:
             await super()._async_control_heating(_time, force=force)
@@ -239,7 +239,7 @@ class Thermostat(GenericThermostat):
         else:
             await super()._async_sensor_changed(event)
 
-    async def _async_control_fallback(self, _time: datetime.datetime | None = None) -> None:
+    async def _async_control_fallback(self, _time: dt.datetime | None = None) -> None:
         if not self._is_fallback_mode_active:
             return
 
