@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.3](https://github.com/gbbirkisson/gbb-ha/compare/v0.7.2...v0.7.3) (2026-10-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ty to v0.0.89 ([#464](https://github.com/gbbirkisson/gbb-ha/issues/464)) ([4df9b2a](https://github.com/gbbirkisson/gbb-ha/commit/4df9b2a3a05e6646d24f1b648a2836536fe5c725))
+* **deps:** update docker.io/homeassistant/home-assistant docker tag to v2026.10.2 ([#466](https://github.com/gbbirkisson/gbb-ha/issues/466)) ([1385f41](https://github.com/gbbirkisson/gbb-ha/commit/1385f41baa8b4199898ad1c8afa24fc4bc89e7f5))
+
 ## [0.7.2](https://github.com/gbbirkisson/gbb-ha/compare/v0.7.1...v0.7.2) (2026-10-15)
 
 
