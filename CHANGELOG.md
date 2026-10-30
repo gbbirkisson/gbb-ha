@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.7.3](https://github.com/gbbirkisson/gbb-ha/compare/v0.7.2...v0.7.3) (2026-10-30)
+
+
+### Bug Fixes
+
+* **deps:** update astral-sh/setup-uv action to v10.3.1 ([#469](https://github.com/gbbirkisson/gbb-ha/issues/469)) ([bd0dbaf](https://github.com/gbbirkisson/gbb-ha/commit/bd0dbaf4cc27f5489c6dd2fedda306ed1930e0e5))
+* **deps:** update astral-sh/setup-uv action to v10.3.2 ([#471](https://github.com/gbbirkisson/gbb-ha/issues/471)) ([291ffad](https://github.com/gbbirkisson/gbb-ha/commit/291ffada0e2e326470d2d8fec176e6fc672f0080))
+* **deps:** update astral-sh/setup-uv action to v10.3.3 ([#482](https://github.com/gbbirkisson/gbb-ha/issues/482)) ([c2ba2f8](https://github.com/gbbirkisson/gbb-ha/commit/c2ba2f838de07171ea999ddd37e6ffb85d0a3390))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.373 ([#467](https://github.com/gbbirkisson/gbb-ha/issues/467)) ([58faa6f](https://github.com/gbbirkisson/gbb-ha/commit/58faa6fe3ac63366021eeb6be2d11dccb65e9f51))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.374 ([#479](https://github.com/gbbirkisson/gbb-ha/issues/479)) ([09d4adb](https://github.com/gbbirkisson/gbb-ha/commit/09d4adb426748509ce9021935bb705892c7b690a))
+* **deps:** update dependency pytest-homeassistant-custom-component to v0.13.375 ([#481](https://github.com/gbbirkisson/gbb-ha/issues/481)) ([5317005](https://github.com/gbbirkisson/gbb-ha/commit/5317005229fe1ec7a784cc91a0a601ffb206df2e))
+* **deps:** update dependency ruff to v0.17.2 ([#472](https://github.com/gbbirkisson/gbb-ha/issues/472)) ([63484c7](https://github.com/gbbirkisson/gbb-ha/commit/63484c716fcb809ab12ad1205a7f781dd71d9e2c))
+* **deps:** update dependency ruff to v0.17.3 ([#477](https://github.com/gbbirkisson/gbb-ha/issues/477)) ([29fc369](https://github.com/gbbirkisson/gbb-ha/commit/29fc369e5658b3c53603999a152eead55f2894e8))
+* **deps:** update dependency ty to v0.0.89 ([#464](https://github.com/gbbirkisson/gbb-ha/issues/464)) ([4df9b2a](https://github.com/gbbirkisson/gbb-ha/commit/4df9b2a3a05e6646d24f1b648a2836536fe5c725))
+* **deps:** update dependency ty to v0.0.90 ([#468](https://github.com/gbbirkisson/gbb-ha/issues/468)) ([a5fc788](https://github.com/gbbirkisson/gbb-ha/commit/a5fc788b86af52cb63f82fdcc631cdde33d5bfa5))
+* **deps:** update dependency ty to v0.0.91 ([#473](https://github.com/gbbirkisson/gbb-ha/issues/473)) ([6f0d4e4](https://github.com/gbbirkisson/gbb-ha/commit/6f0d4e46d95f3d124d461362cb1fd5192c866c12))
+* **deps:** update dependency ty to v0.0.92 ([#476](https://github.com/gbbirkisson/gbb-ha/issues/476)) ([befbd1f](https://github.com/gbbirkisson/gbb-ha/commit/befbd1f9e7084ebfe068135713f8fba0bb7fabed))
+* **deps:** update dependency ty to v0.0.93 ([#480](https://github.com/gbbirkisson/gbb-ha/issues/480)) ([762c353](https://github.com/gbbirkisson/gbb-ha/commit/762c35387103c900baefe15631a2ac686e12e3b2))
+* **deps:** update dependency ty to v0.0.94 ([#483](https://github.com/gbbirkisson/gbb-ha/issues/483)) ([1ee43d5](https://github.com/gbbirkisson/gbb-ha/commit/1ee43d53d852f8301391ce1bad69e3d3d094cde8))
+* **deps:** update dependency ty to v0.0.95 ([#484](https://github.com/gbbirkisson/gbb-ha/issues/484)) ([ce5dc9d](https://github.com/gbbirkisson/gbb-ha/commit/ce5dc9d1c77c7a6dacb66fdf4d849c3221511961))
+* **deps:** update docker.io/homeassistant/home-assistant docker tag to v2026.10.2 ([#466](https://github.com/gbbirkisson/gbb-ha/issues/466)) ([1385f41](https://github.com/gbbirkisson/gbb-ha/commit/1385f41baa8b4199898ad1c8afa24fc4bc89e7f5))
+* **deps:** update docker.io/homeassistant/home-assistant docker tag to v2026.10.3 ([#474](https://github.com/gbbirkisson/gbb-ha/issues/474)) ([47b7c89](https://github.com/gbbirkisson/gbb-ha/commit/47b7c89fd0021bec7436243d89b8ed5e0d695c5f))
+* **deps:** update docker.io/homeassistant/home-assistant docker tag to v2026.10.4 ([#475](https://github.com/gbbirkisson/gbb-ha/issues/475)) ([45c33cb](https://github.com/gbbirkisson/gbb-ha/commit/45c33cb9ef32e10035bf2d84ca89a1fb51990b2e))
+* **deps:** update python docker tag to v3.15.2 ([#478](https://github.com/gbbirkisson/gbb-ha/issues/478)) ([0e25dc9](https://github.com/gbbirkisson/gbb-ha/commit/0e25dc9eb5f533efe6972ecb05fece513042470c))
+
 ## [0.7.2](https://github.com/gbbirkisson/gbb-ha/compare/v0.7.1...v0.7.2) (2026-10-15)
 
 
