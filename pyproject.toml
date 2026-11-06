@@ -1,6 +1,6 @@
 [project]
 name = "custom_components"
-version = "0.7.2"
+version = "0.7.3"
 description = ""
 authors = [{ name = "Guðmundur Björn Birkisson <gbb@gbb.is>" }]
 readme = "README.md"
